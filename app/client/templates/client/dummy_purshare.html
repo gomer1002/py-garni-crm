@@ -1,0 +1,76 @@
+{% extends "client/base.html" %} {% block title %}Гарни - ресторанно-гостиничный
+комплекс{% endblock %} {% block content %}
+
+<body class="row p-0 m-0">
+    <div
+        class="border d-flex align-items-center justify-content-center"
+        style="height: 100vh"
+    >
+        <div>
+            <button
+                type="button"
+                class="btn btn-primary btn-block"
+                data-submit-button="Оплатить заказ {{ order_id }}"
+                value="{{ order_id }}"
+                onclick="purshare(this)"
+            >
+                Оплатить заказ {{ order_id }}
+            </button>
+            <div class="container m-0" style="padding: 0.75rem">
+                <p
+                    id="orderSuccess"
+                    class="note note-success m-0"
+                    style="width: 100%; display: none"
+                ></p>
+            </div>
+            <div class="container m-0" style="padding: 0.75rem">
+                <p
+                    id="orderDanger"
+                    class="note note-danger m-0"
+                    style="width: 100%; display: none"
+                ></p>
+            </div>
+        </div>
+    </div>
+    <script>
+        function purshare(elem) {
+            let order_id = elem.value;
+            order_data = {
+                order_id: order_id,
+            };
+            toggleSubmitSpinner(elem);
+            axios
+                .get(`/api/order/purshare?order_id=${order_id}`)
+                .then(function (response) {
+                    console.log("then ", response.data);
+                    if (response.data.status == "success") {
+                        // document.querySelector("#orderDanger").style.display = "none";
+                        // document.querySelector("#orderSuccess").style.display = "inline-block";
+                        // document.querySelector("#orderSuccess").innerHTML = response.data.message;
+                        toggleSubmitSpinner(elem);
+                        showAlert({
+                            message: response.data.message,
+                            type: "success",
+                        });
+                        setTimeout(() => {
+                            window.location.href = "/";
+                            console.log("redirect");
+                        }, 500);
+                    }
+                })
+                .catch(function (error) {
+                    // console.log("catch ", error.response.data);
+                    // document.querySelector("#orderSuccess").style.display = "none";
+                    // document.querySelector("#orderDanger").style.display = "inline-block";
+                    // document.querySelector("#orderDanger").innerHTML = error.response.data.message;
+                    toggleSubmitSpinner(elem);
+                    showAlert({
+                        message: error.response.data.message,
+                        type: "danger",
+                    });
+                });
+        }
+    </script>
+</body>
+
+{% endblock %}

@@ -1,0 +1,549 @@
+{% extends "client/base.html" %} {% block title %}Гарни - ресторанно-гостиничный
+комплекс{% endblock %} {% block content %}
+
+<body class="row p-0 m-0">
+    <!-- панель навигации -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <!-- оболочка -->
+        <div class="container-fluid p-1">
+            <!-- кнопка разворачивания -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- сворачивающийся контейнер -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- логотип -->
+                <a class="navbar-brand mt-2 mt-lg-0" href="/">
+                    <img
+                        src="{{ url_for('client.static',filename='img/logo-restaurant-w.svg') }}"
+                        height="40"
+                        alt="Garni Logo"
+                        loading="lazy"
+                    />
+                </a>
+            </div>
+            <!-- сворачивающийся контейнер -->
+
+            <!-- элементы справа панели навигации -->
+            <div class="d-flex align-items-center">
+                <!-- иконка корзины -->
+                <a
+                    class="nav-link me-3"
+                    href="#"
+                    data-mdb-toggle="modal"
+                    data-mdb-target="#cartModal"
+                >
+                    <!-- количество элементов в корзине -->
+                    <span
+                        class="badge badge-pill bg-danger"
+                        id="cartTotalQty"
+                    ></span>
+                    <span><i class="fas fa-shopping-cart"></i></span>
+                </a>
+
+                <!-- иконка пользователя -->
+                <div class="dropdown">
+                    <a
+                        class="dropdown-toggle d-flex align-items-center hidden-arrow"
+                        href="#"
+                        id="navbarDropdownMenuAvatar"
+                        role="button"
+                        data-mdb-toggle="dropdown"
+                        aria-expanded="false"
+                    >
+                        <i class="fas fa-user-alt"></i>
+                    </a>
+                    <ul
+                        class="dropdown-menu dropdown-menu-end"
+                        aria-labelledby="navbarDropdownMenuAvatar"
+                        id="navbarLinksList"
+                    ></ul>
+                </div>
+            </div>
+            <!-- элементы справа панели навигации -->
+        </div>
+        <!-- оболочка -->
+    </nav>
+    <!-- панель навигации -->
+
+    <!-- контейнер меню -->
+    <div
+        class="container cards-container d-flex flex-row justify-content-center align-items-center flex-wrap"
+        id="menuContainer"
+    >
+        <!-- контейнер формы поиска -->
+        <div
+            class="d-flex justify-content-center flex-row input pb-2 search-container"
+            style="width: 100%"
+        >
+            <!-- поле ввода -->
+            <input
+                type="text"
+                name="search"
+                class="form-control search-input mt-2"
+                placeholder="Поиск"
+                oninput="filterItemsBy(this, true)"
+            />
+            <div class="d-flex flex-row input mt-2">
+                <!-- контейнер выпадающего списка -->
+                <div class="dropdown">
+                    <!-- кнопка активации выпадающего списка -->
+                    <a
+                        href="#"
+                        class="btn btn-light search-btn d-flex ms-2"
+                        data-mdb-toggle="dropdown"
+                        aria-expanded="false"
+                        data-mdb-auto-close="outside"
+                    >
+                        Тэги
+                        <!-- количество выбранных тегов -->
+                        <span
+                            class="badge badge-pill bg-danger ms-2 display-none"
+                            id="checkedTagsQty"
+                        >
+                            1</span
+                        ></a
+                    >
+                    <!-- контейнер списка тегов -->
+                    <div
+                        class="dropdown-menu p-2"
+                        id="menuTagsContainer"
+                        style="width: 200px"
+                    >
+                        <div class="tag-outline">
+                            <input
+                                class="form-control tag-input"
+                                type="text"
+                                list="tagList"
+                                placeholder="Тэг"
+                                oninput="searchTag(this)"
+                            />
+                            <i
+                                class="fas fa-eraser tag-trailing"
+                                onclick="searchTag(this, true)"
+                            ></i>
+                        </div>
+                        <!-- список тегов -->
+                    </div>
+                </div>
+                <div class="ms-2">
+                    <span
+                        class="btn btn-light search-btn d-flex align-items-center text-center"
+                        onclick="sortData(this)"
+                        data-sort-by="sortPrice"
+                        data-sort-selector="data-sort-price"
+                        data-sort-direction="1"
+                        data-sort-number="true"
+                    >
+                        <i class="fas fa-lg fa-ruble-sign"></i>
+                        <div class="sort-controls ps-1">
+                            <i class="fas fa-caret-right sort-no"></i>
+                            <i
+                                class="fas fa-caret-down sort-down display-none"
+                            ></i>
+                            <i class="fas fa-caret-up sort-up display-none"></i>
+                        </div>
+                    </span>
+                </div>
+                <div class="ms-2">
+                    <span
+                        class="btn btn-light search-btn d-flex align-items-center text-center"
+                        onclick="sortData(this)"
+                        data-sort-by="sortName"
+                        data-sort-selector="data-sort-name"
+                        data-sort-direction="1"
+                        data-sort-swap="true"
+                    >
+                        <strong>AZ</strong>
+                        <div class="sort-controls ps-1">
+                            <i class="fas fa-caret-right sort-no"></i>
+                            <i
+                                class="fas fa-caret-down sort-down display-none"
+                            ></i>
+                            <i class="fas fa-caret-up sort-up display-none"></i>
+                        </div>
+                    </span>
+                </div>
+                <button
+                    class="btn btn-light search-btn ms-2"
+                    onclick="clearSearch(this)"
+                >
+                    Очистить
+                </button>
+            </div>
+        </div>
+        <!-- сюда будут вставляться позиции меню -->
+    </div>
+
+    <!-- прокручивемое модальное окно корзины -->
+    <div
+        class="modal fade"
+        id="cartModal"
+        tabindex="-1"
+        aria-labelledby="cartModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <!-- шапка модального окна -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="cartModalLabel">Корзина</h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-mdb-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <!-- тело модального окна -->
+                <div class="modal-body p-0">
+                    <!-- контейнер для позиций в корзине -->
+                    <div
+                        id="cartContainer"
+                        class="d-flex flex-row flex-wrap p-2"
+                    >
+                        <!-- сообщение о том что корзина пустая -->
+                        <p
+                            id="cartWarning"
+                            class="note note-warning m-0"
+                            style="width: 100%; display: none"
+                        >
+                            В корзине пусто
+                        </p>
+                    </div>
+                    <!-- контейнер для итого корзины -->
+                    <div
+                        id="cartTotalBlock"
+                        class="container m-0 p-0"
+                        style="display: none"
+                    >
+                        <div
+                            class="d-flex justify-content-between align-items-end p-2"
+                        >
+                            <div class="px-3">
+                                <span><strong>Итого:</strong></span>
+                            </div>
+                            <div class="px-3">
+                                <span><strong id="cartTotal"></strong></span>
+                                <span>руб.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- подвал модального окна -->
+                    <div class="modal-footer">
+                        <div
+                            class="container d-flex justify-content-between p-0 m-0"
+                        >
+                            <!-- кнопка очистки корзины -->
+                            <div style="width: 35%">
+                                <button
+                                    type="button"
+                                    class="btn btn-danger btn-block"
+                                    onclick="clearCart()"
+                                >
+                                    Очистить
+                                </button>
+                            </div>
+                            <!-- кнопка далее -->
+                            <div style="width: 35%">
+                                <button
+                                    type="button"
+                                    class="btn btn-primary btn-block"
+                                    id="orderModalButton"
+                                    data-mdb-target="#orderModal"
+                                    data-mdb-toggle="modal"
+                                    data-mdb-dismiss="modal"
+                                >
+                                    Далее
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- прокручивемое модальное окно заказа -->
+    <div
+        class="modal fade"
+        id="orderModal"
+        tabindex="-1"
+        aria-labelledby="orderModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <!-- шапка окна -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderModalLabel">
+                        Оформление заказа
+                    </h5>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-mdb-dismiss="modal"
+                        aria-label="Close"
+                    ></button>
+                </div>
+                <!-- тело окна -->
+                <div class="modal-body p-0">
+                    <!-- форма заказа -->
+                    <form class="container p-2" id="orderTypeForm">
+                        <!-- контейнер типов заказа -->
+                        <div
+                            id="ordreTypeRadioGroup"
+                            class="container d-flex justify-content-between flex-row align-items-center"
+                        >
+                            <div>
+                                <span>Тип заказа:</span>
+                            </div>
+                            <!-- радиокнопка "в зале" -->
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="orderTypeRadio"
+                                    value="dine_in"
+                                    id="orderTypeRadio1"
+                                    onclick="changeOrderForm()"
+                                    checked
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="orderTypeRadio1"
+                                    >В зале</label
+                                >
+                            </div>
+                            <!-- радиокнопка "с собой" -->
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="orderTypeRadio"
+                                    value="pickup"
+                                    id="orderTypeRadio2"
+                                    onclick="changeOrderForm()"
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="orderTypeRadio2"
+                                    >С собой</label
+                                >
+                            </div>
+                            <!-- радиокнопка "доставка" -->
+                            <div class="form-check">
+                                <input
+                                    class="form-check-input"
+                                    type="radio"
+                                    name="orderTypeRadio"
+                                    value="delivery"
+                                    id="orderTypeRadio3"
+                                    onclick="changeOrderForm()"
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="orderTypeRadio3"
+                                    >Доставка</label
+                                >
+                            </div>
+                        </div>
+                        <!-- контейнер полей для ввода адреса доставки -->
+                        <div
+                            class="container"
+                            id="deliveryInfo"
+                            style="display: none"
+                        >
+                            <div class="pb-2">
+                                <span>Адрес доставки:</span>
+                            </div>
+                            <!-- ввод города -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="text"
+                                    id="deliveryCity"
+                                    name="city"
+                                    class="form-control"
+                                />
+                                <label class="form-label" for="deliveryCity"
+                                    >Город</label
+                                >
+                            </div>
+                            <!-- ввод улицы -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="text"
+                                    id="deliveryStreet"
+                                    name="street"
+                                    class="form-control"
+                                />
+                                <label class="form-label" for="deliveryStreet"
+                                    >Улица</label
+                                >
+                            </div>
+                            <!-- ввод дома -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="number"
+                                    id="deliveryHouse"
+                                    name="house"
+                                    class="form-control"
+                                    pattern="/\d$/g"
+                                    min="1"
+                                />
+                                <label class="form-label" for="deliveryHouse"
+                                    >Дом</label
+                                >
+                            </div>
+                            <!-- ввод квартиры -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="number"
+                                    id="deliveryApartment"
+                                    name="apartment"
+                                    class="form-control"
+                                    pattern="/\d$/g"
+                                    min="1"
+                                />
+                                <label
+                                    class="form-label"
+                                    for="deliveryApartment"
+                                    >Квартира</label
+                                >
+                            </div>
+                            <!-- чекбокс сохранения адреса -->
+                            <div class="form-check mb-3 mb-md-0">
+                                <input
+                                    class="form-check-input"
+                                    type="checkbox"
+                                    value=""
+                                    id="deliveryRemember"
+                                    checked
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="deliveryRemember"
+                                >
+                                    Запомнить адрес
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- подвал окна -->
+                    <div class="modal-footer">
+                        <div
+                            class="container d-flex justify-content-between p-0 m-0"
+                        >
+                            <!-- кнопка назад -->
+                            <div style="width: 35%">
+                                <button
+                                    type="button"
+                                    class="btn btn-secondary btn-block"
+                                    data-mdb-target="#cartModal"
+                                    data-mdb-toggle="modal"
+                                    data-mdb-dismiss="modal"
+                                >
+                                    Назад
+                                </button>
+                            </div>
+                            <!-- кнопка оформления заказа -->
+                            <div style="width: 35%">
+                                <button
+                                    type="submit"
+                                    data-submit-button="Оформить заказ"
+                                    id="placeOrderButton"
+                                    form="orderTypeForm"
+                                    class="btn btn-primary btn-block"
+                                >
+                                    Оформить заказ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- прокручивемое модальное окно заказов пользователя -->
+    <div
+        class="modal fade"
+        id="orderListModal"
+        tabindex="-1"
+        aria-labelledby="orderListModalLabel"
+        aria-hidden="true"
+    >
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <!-- шапка окна -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderListModalLabel">Заказы</h5>
+                    <div class="d-flex align-items-center">
+                        <!-- иконка обновления списка заказов -->
+                        <a href="#" class="p-1" onclick="reloadOrderList()">
+                            <i class="fas fa-redo"></i>
+                        </a>
+                        <!-- иконка закрытия окна -->
+                        <a
+                            href="#"
+                            class="p-1"
+                            data-mdb-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <i class="fas fa-times fa-lg"></i>
+                        </a>
+                    </div>
+                </div>
+                <!-- тело окна -->
+                <div class="modal-body p-0">
+                    <div class="container">
+                        <!-- список заказов пользователя -->
+                        <ul
+                            class="list-group list-group-light accordion"
+                            id="userOrdersList"
+                            style="min-height: 50px"
+                        >
+                            <!-- сюда будут вставляться элементы заказов -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- подключение скрипта index main -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/index_main.js') }}"
+    ></script>
+    <!-- подключение скрипта index menu -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/index_menu.js') }}"
+    ></script>
+    <!-- подключение скрипта index user -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/index_user.js') }}"
+    ></script>
+    <!-- подключение скрипта index cart -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/index_cart.js') }}"
+    ></script>
+    <!-- подключение скрипта utils push -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/utils_push.js') }}"
+    ></script>
+</body>
+
+{% endblock %}

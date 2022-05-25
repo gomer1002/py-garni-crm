@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- Подключение Font Awesome -->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+            rel="stylesheet"
+        />
+        <!-- Подключение Google Fonts -->
+        <link
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+            rel="stylesheet"
+        />
+        <!-- Подключение стилей MDB -->
+        <link
+            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css"
+            rel="stylesheet"
+        />
+        <!-- Подключение своих стилей -->
+        <link
+            href="{{ url_for('client.static',filename='css/styles.css') }}"
+            rel="stylesheet"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            href="{{ url_for('client.static',filename='img/logo-restaurant-w.svg') }}"
+        />
+        <title>{% block title %}{% endblock %}</title>
+    </head>
+
+    {% block content %}
+    <!-- Сюда будут вставляться все страницы системы -->
+    {% endblock %}
+
+    <!-- Подключение скриптов MDB -->
+    <script
+        type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"
+    ></script>
+    <!-- Подключение библиотеки axios -->
+    <script
+        type="text/javascript"
+        src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"
+    ></script>
+    <!-- Подключение библиотеки для работы с md5 -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/utils_md5.js') }}"
+    ></script>
+    <!-- Подключение библиотеки для работы с cookie -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/utils_cookie.js') }}"
+    ></script>
+    <!-- Подключение библиотеки для автовыхода из учетной записи log out -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/utils_log_out.js') }}"
+    ></script>
+    <!-- Подключение библиотеки базовых функций, использующихся везде в проекте -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/utils_main.js') }}"
+    ></script>
+</html>

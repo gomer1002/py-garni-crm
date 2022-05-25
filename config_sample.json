@@ -1,0 +1,32 @@
+{
+    "FIREBASE_DATABASE": {
+
+        "apiKey": "---api key from firebase app config---",
+        "authDomain": "---auth domain from firebase app config---",
+        "projectId": "---project id from firebase app config---",
+        "storageBucket": "---storage bucket url from firebase app config---",
+        "messagingSenderId": "---sender id from firebase app config---",
+        "appId": "---app id from firebase app config---",
+        "measurementId": "---measurement id from firebase app config---",
+
+        "serviceAccount": {
+            "type": "---account type from firebase service account credentials---",
+            "project_id": "---project id from firebase service account credentials---",
+            "private_key_id": "---p_key id from firebase service account credentials---",
+            "private_key": "---service account private key from firebase service account credentials---",
+            "client_email": "---email from firebase service account credentials---",
+            "client_id": "---client id from firebase service account credentials---",
+            "auth_uri": "---auth uri from firebase service account credentials---",
+            "token_uri": "---token uri from firebase service account credentials---",
+            "auth_provider_x509_cert_url": "---provider url from firebase service account credentials---",
+            "client_x509_cert_url": "---client cert url from firebase service account credentials---"
+        }
+    },
+
+    "JWT_SECRET_KEY": "---secret key---",
+    "DER_BASE64_ENCODED_PRIVATE_KEY": "---vapid private key---",
+    "DER_BASE64_ENCODED_PUBLIC_KEY": "---vapid application (public) key---",
+    "REDIS_URL": "---redis url--- (redis://localhost:6379)",
+    "SYS_PEPPER": "---key for peppering password (65 char max) (...ef1cfds44cbf4f82...)---",
+    "SYS_ROOT_URL": "---full url to this application (https://my-app.com/)---"
+}

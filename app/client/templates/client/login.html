@@ -1,0 +1,238 @@
+{% extends "client/base.html" %} {% block title %}Login{% endblock %} {% block
+content %}
+
+<body class="row p-0 m-0" style="height: 100vh; color: #565656">
+    <!-- панель навигации -->
+    <nav
+        class="navbar navbar-expand-lg navbar-dark bg-dark"
+        style="height: min-content"
+    >
+        <div class="container-fluid p-1">
+            <!-- кнопка разворачивания -->
+            <button
+                class="navbar-toggler"
+                type="button"
+                data-mdb-toggle="collapse"
+                data-mdb-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <i class="fas fa-bars"></i>
+            </button>
+            <!-- сворачивающийся контейнер -->
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <!-- логотип -->
+                <a class="navbar-brand mt-2 mt-lg-0" href="/">
+                    <img
+                        src="{{ url_for('client.static',filename='img/logo-restaurant-w.svg') }}"
+                        height="40"
+                        alt="Garni Logo"
+                        loading="lazy"
+                    />
+                </a>
+            </div>
+        </div>
+    </nav>
+    <!-- контейнер страницы -->
+    <div
+        class="row d-flex align-items-center justify-content-center"
+        style="height: max-content"
+    >
+        <div
+            class="row d-flex align-items-center justify-content-center align-self-center"
+        >
+            <div class="col-sm-2 col-md-2 col-lg-4 col-xl-4"></div>
+
+            <!-- блок формы -->
+            <div
+                class="px-1 col-10 col-sm-8 col-md-5 col-lg-4 col-xl-4"
+                style="max-width: 400px"
+            >
+                <!-- если необходимо показать форму -->
+                {% if show_login %}
+                <!-- кнопки переключения форм -->
+                <ul
+                    class="nav nav-pills nav-justified mb-3"
+                    id="ex1"
+                    role="tablist"
+                >
+                    <li class="nav-item" role="presentation">
+                        <a
+                            class="nav-link active"
+                            id="tab-login"
+                            data-mdb-toggle="pill"
+                            href="#pills-login"
+                            role="tab"
+                            aria-controls="pills-login"
+                            aria-selected="true"
+                            onclick="resetMsgs()"
+                            >Вход</a
+                        >
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                            class="nav-link"
+                            id="tab-register"
+                            data-mdb-toggle="pill"
+                            href="#pills-register"
+                            role="tab"
+                            aria-controls="pills-register"
+                            aria-selected="false"
+                            onclick="resetMsgs()"
+                            >Регистрация</a
+                        >
+                    </li>
+                </ul>
+                <!-- формы -->
+                <div class="tab-content">
+                    <div
+                        class="tab-pane fade show active"
+                        id="pills-login"
+                        role="tabpanel"
+                        aria-labelledby="tab-login"
+                    >
+                        <!-- форма авторизации -->
+                        <form id="loginForm" data-redirect-target="/">
+                            <!-- ввод телефона -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="tel"
+                                    id="loginPhone"
+                                    name="loginPhone"
+                                    data-tel-input
+                                    class="form-control"
+                                    placeholder="+7 (___) ___-__-__"
+                                    pattern="(\d|\(|\)| |\+|-){11,18}$"
+                                    minlength="11"
+                                    maxlength="18"
+                                    required=""
+                                />
+                                <label class="form-label" for="loginPhone"
+                                    >Номер телефона</label
+                                >
+                            </div>
+                            <!-- ввод пароля -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="password"
+                                    id="loginPassword"
+                                    class="form-control"
+                                    minlength="8"
+                                    required
+                                />
+                                <label class="form-label" for="loginPassword"
+                                    >Пароль</label
+                                >
+                            </div>
+                            <!-- кнопка авторизации -->
+                            <button
+                                type="submit"
+                                data-submit-button="Войти"
+                                class="btn btn-primary btn-block mb-4"
+                            >
+                                Войти
+                            </button>
+                        </form>
+                    </div>
+                    <div
+                        class="tab-pane fade"
+                        id="pills-register"
+                        role="tabpanel"
+                        aria-labelledby="tab-register"
+                    >
+                        <!-- форма регистрации -->
+                        <form id="registerForm" data-redirect-target="/">
+                            <!-- ввод имени -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="text"
+                                    id="registerName"
+                                    class="form-control"
+                                    required
+                                />
+                                <label class="form-label" for="registerName"
+                                    >Имя</label
+                                >
+                            </div>
+                            <!-- ввод телефона -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="tel"
+                                    id="registerPhone"
+                                    name="loginPhone"
+                                    data-tel-input
+                                    class="form-control"
+                                    placeholder="+7 (___) ___-__-__"
+                                    pattern="(\d|\(|\)| |\+|-){11,18}$"
+                                    minlength="11"
+                                    maxlength="18"
+                                    required=""
+                                />
+                                <label class="form-label" for="loginPhone"
+                                    >Номер телефона</label
+                                >
+                            </div>
+                            <!-- ввод пароля -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="password"
+                                    id="registerPassword"
+                                    class="form-control"
+                                    pattern="([A-Za-z0-9_-]{8,})$"
+                                    minlength="8"
+                                    required
+                                />
+                                <label class="form-label" for="registerPassword"
+                                    >Пароль</label
+                                >
+                            </div>
+                            <!-- ввод повторения пароля -->
+                            <div class="form-outline mb-4">
+                                <input
+                                    type="password"
+                                    id="registerRepeatPassword"
+                                    class="form-control"
+                                    required
+                                />
+                                <label
+                                    class="form-label"
+                                    for="registerRepeatPassword"
+                                    >Пароль еще раз</label
+                                >
+                            </div>
+                            <!-- кнопка регистрации -->
+                            <button
+                                type="submit"
+                                id="registerSubmit"
+                                data-submit-button="Зарегистрироваться"
+                                class="btn btn-primary btn-block mb-3"
+                            >
+                                Зарегистрироваться
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
+                <!-- переадресация если пользователь авторизован -->
+                <script>
+                    window.location.href = "/";
+                </script>
+                {% endif %}
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-4 col-xl-4"></div>
+        </div>
+    </div>
+    <!-- подключение главного скрипта авторизации и регистрации -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/login_main.js') }}"
+    ></script>
+    <!-- подключение билиотеки обработки поля ввода телефона -->
+    <script
+        type="text/javascript"
+        src="{{ url_for('client.static',filename='js/login_phoneinput.js') }}"
+    ></script>
+</body>
+
+{% endblock %}
