@@ -40,6 +40,8 @@ py -m pip install -r ./requirements.txt
 
 Для получения конфигурационных данных для заполнения `serviceAccount` необходимо перейти в раздел `Service accounts` в настройках проекта и нажать кнопку `Generate new private key`. Данные из полученного json файла скопировать в _config.json_ в поле serviceAccount`.
 
+После получения всех конфигурационных данных необходимо создать базу данных `Cloud Firestore`. Для этого необходимо выбрать в меню в левой части страницы пункт `Firestore database` и создать базу данных.
+
 Далее необходимо заполнить поля с ключами.
 
 Создание пары ключей `DER_BASE64_ENCODED_PUBLIC_KEY` и `DER_BASE64_ENCODED_PRIVATE_KEY` для push-уведомлений:
@@ -88,7 +90,7 @@ vapid --applicationServerKey
 
 >Использоваие команды создания суперпользователя
 >
->```sh
+>```text
 >usage: manage.py create_superuser [-?] [-p PASSWORD] [-t PHONE] [-n NAME]
 >
 >Создание суперпользователя
@@ -103,7 +105,7 @@ vapid --applicationServerKey
 >```
 
 ```sh
-py .\manage.py create_superuser --name Admin --tel 71234567890 --pass admin
+py .\manage.py create_superuser --name Admin --tel 71234567890 --pass adminadmin
 ```
 
 После создания суперпользователя проект готов к запуску.
