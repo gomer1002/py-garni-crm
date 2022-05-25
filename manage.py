@@ -63,6 +63,9 @@ def create_superuser(name=None, phone=None, password=None):
     if isinstance(password, type(None)):
         print("Необходимо указать пароль пользователя. (ключ -p или --pass)")
         flag = False
+    elif len(password) < 7:
+        print("Пароль пользователя должен быть не менее 8 символов.")
+        flag = False
 
     if flag:
         result = hashlib.md5(password.encode("utf-8"))
