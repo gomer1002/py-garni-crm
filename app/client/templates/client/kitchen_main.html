@@ -1,0 +1,36 @@
+{% extends "client/base.html" %}
+<!--  -->
+{% block title %}Гарни - ресторанно-гостиничный комплекс{% endblock %}
+<!--  -->
+{% block styles %}
+<link
+    href="{{ url_for('client.static',filename='css/admin_styles.css') }}"
+    rel="stylesheet"
+/>
+{% endblock %}
+<!--  -->
+{% block body %}
+
+<!-- ########################### Kitchen Nav Bar ########################## -->
+{% include "client/kitchen_nav.html" %}
+<!-- ########################### Kitchen Nav Bar ########################## -->
+
+<!-- Order Container -->
+<section
+    class="container d-flex flex-row justify-content-start align-items-center flex-wrap section-padding-100"
+    id="orderContainer"
+>
+    <!-- There will be orders -->
+</section>
+<!-- Order Container -->
+
+{% endblock %}
+<!--  -->
+{% block scripts %}
+
+<script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/kitchen/kitchen_main.js') }}"
+></script>
+
+{% endblock %}

@@ -1,0 +1,66 @@
+<!-- ##### Header Area Start ##### -->
+<header class="header_wrapper">
+    <div class="container py-0">
+        <div class="row px-3">
+            <div
+                class="col-12 col-md-4 col-lg-3 header_area classy-nav-container breakpoint-off d-flex align-items-center justify-content-between"
+            >
+                <!-- Classy Menu -->
+                <nav class="classy-navbar" id="essenceNav">
+                    <!-- Logo -->
+                    <a class="nav-brand" href="/admin">
+                        <img
+                            src="{{ url_for('client.static',filename='img/logo-restaurant-b.svg') }}"
+                            alt=""
+                        />
+                    </a>
+                    <!-- Navbar Toggler -->
+                    <div class="classy-navbar-toggler">
+                        <span class="navbarToggler"
+                            ><span></span><span></span><span></span
+                        ></span>
+                    </div>
+                    <!-- Menu -->
+                    <div class="classy-menu">
+                        <!-- close btn -->
+                        <div class="classycloseIcon">
+                            <div class="cross-wrap">
+                                <span class="top"></span
+                                ><span class="bottom"></span>
+                            </div>
+                        </div>
+                        <!-- Nav Start -->
+                        <div class="classynav">
+                            <ul class="p-0">
+                                <!-- <li><a href="#" id="navClock"></a></li>
+                                <li><a href="#" id="navDate"></a></li> -->
+                                <!-- <li><a href="/admin/">Главная</a></li> -->
+                                <li>
+                                    <a href="/admin/users/">Пользователи</a>
+                                </li>
+                                <li><a href="/admin/storage/">Склад</a></li>
+                                <li><a href="/admin/menu/">Меню</a></li>
+                            </ul>
+                        </div>
+                        <!-- Nav End -->
+                    </div>
+                </nav>
+
+                <!-- Header Meta Data -->
+                <div class="d-flex flex-fill clearfix justify-content-end">
+                    <!-- Cart Area -->
+                    <div class="cart-area">
+                        <a href="#" onclick="log_out_me('/admin')"
+                            ><i class="fas fa-lg fa-sign-out-alt"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- ##### Header Area End ##### -->
+<!-- <script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/utils/utils_nav_clock.js') }}"
+></script> -->

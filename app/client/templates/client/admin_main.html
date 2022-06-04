@@ -1,0 +1,50 @@
+{% extends "client/base.html" %}
+<!--  -->
+{% block title %}Гарни - ресторанно-гостиничный комплекс{% endblock %}
+<!--  -->
+{% block styles %}
+<link
+    href="{{ url_for('client.static',filename='css/admin_styles.css') }}"
+    rel="stylesheet"
+/>
+{% endblock %}
+<!--  -->
+{% block body %}
+
+<!-- ########################### Admin Nav Bar ########################## -->
+{% include "client/admin_nav.html" %}
+<!-- ########################### Admin Nav Bar ########################## -->
+
+<!-- ########################### Main page ############################## -->
+<section class="container pt-2">
+    <div class="container">
+        <div class="row px-3" id="MainListContainer">
+            <!--  -->
+            Main page
+            <button
+                type="button"
+                class="btn btn-link btn-sm px-3"
+                data-ripple-color="dark"
+                onclick="showMessage('Что-то пошло не так','danger')"
+            >
+                <i class="fas fa-user-times text-dark"></i>
+            </button>
+            <button
+                type="button"
+                class="btn btn-link btn-sm px-3"
+                data-ripple-color="dark"
+                onclick="showAlert({message:'Все пошло так, как надо', type:'success', auto_dispose:false})"
+            >
+                <i class="fas fa-user-times text-dark"></i>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ########################### Main page ############################## -->
+
+{% endblock %}
+<!--  -->
+{% block scripts %}
+<!-- scripts -->
+{% endblock %}

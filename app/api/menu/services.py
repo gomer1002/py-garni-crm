@@ -28,6 +28,7 @@ def validate_request_data(post_data: dict) -> bool:
             and len(post_data.get("img_urls")) != 0
             and isinstance(post_data.get("tags"), list)
             and len(post_data.get("tags")) != 0
+            and isinstance(post_data.get("category"), str)
         )
     except (ValueError, TypeError) as e:
         logger.error(str(e))
@@ -50,6 +51,7 @@ def update_menu_item_service(post_data: dict) -> bool:
         portion_weight=int(post_data.get("portion_weight")),
         portion_calories=int(post_data.get("portion_calories")),
         tags=post_data.get("tags"),
+        category=post_data.get("category"),
     ).save()
 
 

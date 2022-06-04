@@ -1,44 +1,39 @@
-{% extends "client/base.html" %} {% block title %}Login{% endblock %} {% block
-content %}
+{% extends "client/base.html" %}
+<!--  -->
+{% block title %}Login{% endblock %}
+<!--  -->
+{% block styles %}
+<link
+    href="{{ url_for('client.static',filename='css/login_styles.css') }}"
+    rel="stylesheet"
+/>
+{% endblock %}
+<!--  -->
+{% block body %}
 
-<body class="row p-0 m-0" style="height: 100vh; color: #565656">
-    <!-- панель навигации -->
-    <nav
-        class="navbar navbar-expand-lg navbar-dark bg-dark"
-        style="height: min-content"
-    >
-        <div class="container-fluid p-1">
-            <!-- кнопка разворачивания -->
-            <button
-                class="navbar-toggler"
-                type="button"
-                data-mdb-toggle="collapse"
-                data-mdb-target="#navbarSupportedContent"
-                aria-controls="navbarSupportedContent"
-                aria-expanded="false"
-                aria-label="Toggle navigation"
+<!-- ##### Header Area Start ##### -->
+<header class="header_wrapper">
+    <div class="container py-0">
+        <div class="row px-3">
+            <div
+                class="col-12 col-md-4 col-lg-3 header_area classy-nav-container breakpoint-off d-flex align-items-center justify-content-between"
             >
-                <i class="fas fa-bars"></i>
-            </button>
-            <!-- сворачивающийся контейнер -->
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <!-- логотип -->
-                <a class="navbar-brand mt-2 mt-lg-0" href="/">
-                    <img
-                        src="{{ url_for('client.static',filename='img/logo-restaurant-w.svg') }}"
-                        height="40"
-                        alt="Garni Logo"
-                        loading="lazy"
-                    />
-                </a>
+                <nav class="classy-navbar" id="essenceNav">
+                    <!-- Logo -->
+                    <a class="nav-brand" href="/"
+                        ><img
+                            src="{{ url_for('client.static',filename='img/logo-restaurant-b.svg') }}"
+                            alt=""
+                    /></a>
+                </nav>
             </div>
         </div>
-    </nav>
-    <!-- контейнер страницы -->
-    <div
-        class="row d-flex align-items-center justify-content-center"
-        style="height: max-content"
-    >
+    </div>
+</header>
+<!-- ##### Header Area End ##### -->
+
+<div class="row p-0 m-0" style="height: 80vh; color: #565656">
+    <div class="row d-flex align-items-center justify-content-center">
         <div
             class="row d-flex align-items-center justify-content-center align-self-center"
         >
@@ -66,7 +61,6 @@ content %}
                             role="tab"
                             aria-controls="pills-login"
                             aria-selected="true"
-                            onclick="resetMsgs()"
                             >Вход</a
                         >
                     </li>
@@ -79,7 +73,6 @@ content %}
                             role="tab"
                             aria-controls="pills-register"
                             aria-selected="false"
-                            onclick="resetMsgs()"
                             >Регистрация</a
                         >
                     </li>
@@ -129,7 +122,7 @@ content %}
                             <button
                                 type="submit"
                                 data-submit-button="Войти"
-                                class="btn btn-primary btn-block mb-4"
+                                class="btn btn-block essence-btn mb-4"
                             >
                                 Войти
                             </button>
@@ -206,7 +199,7 @@ content %}
                                 type="submit"
                                 id="registerSubmit"
                                 data-submit-button="Зарегистрироваться"
-                                class="btn btn-primary btn-block mb-3"
+                                class="btn btn-block essence-btn mb-3"
                             >
                                 Зарегистрироваться
                             </button>
@@ -223,16 +216,22 @@ content %}
             <div class="col-sm-2 col-md-2 col-lg-4 col-xl-4"></div>
         </div>
     </div>
-    <!-- подключение главного скрипта авторизации и регистрации -->
-    <script
-        type="text/javascript"
-        src="{{ url_for('client.static',filename='js/login_main.js') }}"
-    ></script>
-    <!-- подключение билиотеки обработки поля ввода телефона -->
-    <script
-        type="text/javascript"
-        src="{{ url_for('client.static',filename='js/login_phoneinput.js') }}"
-    ></script>
-</body>
+</div>
+
+{% endblock %}
+<!--  -->
+
+{% block scripts %}
+
+<!-- подключение главного скрипта авторизации и регистрации -->
+<script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/login/login_main.js') }}"
+></script>
+<!-- подключение билиотеки обработки поля ввода телефона -->
+<script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/login/login_phoneinput.js') }}"
+></script>
 
 {% endblock %}

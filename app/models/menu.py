@@ -17,17 +17,18 @@ class Menu(MethodView):
 
     def __init__(
         self,
-        item_id=None,
-        item_name=None,
-        item_description=None,
-        available_to_order=None,
-        show=None,
-        img_urls=None,
-        composition=None,
-        portion_weight=None,
-        portion_calories=None,
-        tags=None,
-        price=None,
+        item_id: str = None,
+        item_name: str = None,
+        item_description: str = None,
+        available_to_order: bool = None,
+        show: bool = None,
+        img_urls: list = None,
+        composition: list = None,
+        portion_weight: int = None,
+        portion_calories: int = None,
+        tags: list = None,
+        category: str = None,
+        price: float = None,
     ):
         self.item_id = item_id if item_id else str(uuid.uuid4())
         self.item_name = item_name
@@ -39,6 +40,7 @@ class Menu(MethodView):
         self.portion_weight = portion_weight
         self.portion_calories = portion_calories
         self.tags = tags
+        self.category = category
         self.price = price
         self.updated_on = get_time()
         self.updated_on_unix = get_time(get_timestamp=True)
@@ -71,6 +73,8 @@ class Menu(MethodView):
             data["portion_calories"] = self.portion_calories
         if self.tags:
             data["tags"] = self.tags
+        if self.category:
+            data["category"] = self.category
         if self.price:
             data["price"] = self.price
 

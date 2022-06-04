@@ -1,0 +1,363 @@
+{% extends "client/base.html" %}
+<!--  -->
+{% block title %}Гарни - ресторанно-гостиничный комплекс{% endblock %}
+<!--  -->
+{% block styles %}
+<link
+    href="{{ url_for('client.static',filename='css/admin_styles.css') }}"
+    rel="stylesheet"
+/>
+{% endblock %}
+<!--  -->
+{% block body %}
+
+<!-- ########################### Admin Nav Bar ########################## -->
+{% include "client/admin_nav.html" %}
+<!-- ########################### Admin Nav Bar ########################## -->
+
+<!-- ########################### Menu page ############################## -->
+
+<section class="container pt-2">
+    <div class="container">
+        <div class="row px-3">
+            <div class="d-flex flex-row input px-0 mb-2" style="width: 100%">
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Поиск"
+                    oninput="searchData(this)"
+                />
+                <button
+                    class="btn essence-btn ms-2"
+                    onclick="clearSearch(this)"
+                >
+                    Очистить
+                </button>
+            </div>
+            <div class="list-group-wrapper">
+                <ul
+                    class="list-group list-group-light flex-fill"
+                    style="width: 100%"
+                    id="menuList"
+                >
+                    <!-- menu items -->
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- edit Menu Item Modal -->
+<div class="modal fade" id="editMenuItemModal" tabindex="-1" aria-hidden="true">
+    <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Редактирование позиции</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-mdb-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <form id="editMenuItemModalForm">
+                    <!-- item_id -->
+                    <input type="hidden" name="item_id" value="" />
+
+                    <!-- Item galery -->
+                    <div
+                        class="d-flex justify-content-start align-items-center flex-row flex-wrap item-galery mb-4"
+                    ></div>
+
+                    <div
+                        class="d-flex justify-content-start align-items-center mb-4"
+                    >
+                        <div class="form-outline flex-fill me-4">
+                            <!-- Name input -->
+                            <input
+                                type="text"
+                                id="name_input"
+                                name="name_input"
+                                class="form-control"
+                                required
+                            />
+                            <label class="form-label" for="name_input"
+                                >Нименование</label
+                            >
+                        </div>
+
+                        <div class="form-outline me-4">
+                            <!-- Price input -->
+                            <input
+                                type="number"
+                                id="price_input"
+                                name="price_input"
+                                class="form-control"
+                                min="1"
+                                step="0.1"
+                                required
+                            />
+                            <label class="form-label" for="price_input"
+                                >Стоимость, руб.</label
+                            >
+                        </div>
+
+                        <div class="dropdown">
+                            <!-- Tags input -->
+                        </div>
+                    </div>
+
+                    <div class="d-flex mb-4">
+                        <div class="form-outline flex-fill me-4">
+                            <!-- Description input -->
+                            <textarea
+                                class="form-control"
+                                id="description_input"
+                                name="description_input"
+                                rows="5"
+                                required
+                            ></textarea>
+                            <label class="form-label" for="description_input"
+                                >Описание</label
+                            >
+                        </div>
+                        <div
+                            class="d-flex flex-column justify-content-between align-items-center"
+                        >
+                            <div class="form-outline">
+                                <!-- Category input -->
+                                <input
+                                    type="text"
+                                    id="category_input"
+                                    name="category_input"
+                                    class="form-control"
+                                    list="menuCategoryList"
+                                    required
+                                />
+                                <label class="form-label" for="category_input"
+                                    >Категория</label
+                                >
+                            </div>
+                            <div class="form-outline">
+                                <!-- Weight input -->
+                                <input
+                                    type="number"
+                                    id="weight_input"
+                                    name="weight_input"
+                                    class="form-control"
+                                    min="1"
+                                    required
+                                />
+                                <label class="form-label" for="weight_input"
+                                    >Вес порции, гр.</label
+                                >
+                            </div>
+                            <div class="form-outline">
+                                <!-- Calories input -->
+                                <input
+                                    type="number"
+                                    id="calories_input"
+                                    name="calories_input"
+                                    class="form-control"
+                                    min="1"
+                                    required
+                                />
+                                <label class="form-label" for="calories_input"
+                                    >Калорийность, кКал</label
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div
+                        class="d-flex list-group list-group-light flex-fill composition-container mb-4"
+                    >
+                        <!-- Header -->
+                        <!-- income record -->
+                    </div>
+
+                    <div
+                        class="d-flex justify-content-between align-items-center flex-wrap"
+                    >
+                        <div class="d-flex justify-content-start mt-2">
+                            <!-- Show checkbox -->
+                            <div
+                                class="form-check d-flex justify-content-center me-4"
+                            >
+                                <input
+                                    class="form-check-input me-2"
+                                    type="checkbox"
+                                    value=""
+                                    id="show_input"
+                                    name="show_input"
+                                    checked
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="show_input"
+                                >
+                                    Отображать в меню
+                                </label>
+                            </div>
+                            <!-- Available checkbox -->
+                            <div
+                                class="form-check d-flex justify-content-center me-4"
+                            >
+                                <input
+                                    class="form-check-input me-2"
+                                    type="checkbox"
+                                    value=""
+                                    id="available_input"
+                                    name="available_input"
+                                    checked
+                                />
+                                <label
+                                    class="form-check-label"
+                                    for="available_input"
+                                >
+                                    Доступность для заказа
+                                </label>
+                            </div>
+                        </div>
+                        <!-- Submit button -->
+                        <button
+                            type="submit"
+                            data-submit-button="Сохранить"
+                            class="btn essence-btn mt-2"
+                        >
+                            Сохранить
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- edit Menu Item Modal -->
+
+<!-- Gallery modal -->
+<div
+    class="modal fade"
+    id="menuImageGaleryModal"
+    tabindex="-1"
+    aria-hidden="true"
+    data-mdb-backdrop="true"
+>
+    <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg"
+    >
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Галерея</h5>
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-mdb-dismiss="modal"
+                    aria-label="Close"
+                ></button>
+            </div>
+            <div class="modal-body">
+                <!-- Item galery -->
+                <div
+                    class="d-flex justify-content-start align-items-center flex-row flex-wrap item-galery mb-4"
+                ></div>
+                <div
+                    class="modal-footer d-flex justify-content-between align-items-center"
+                >
+                    <form
+                        method="post"
+                        enctype="multipart/form-data"
+                        id="menuFilesUploadForm"
+                        class="d-flex justify-content-start align-items-center"
+                    >
+                        <input
+                            class="form-control"
+                            type="file"
+                            accept=".jpg, .png, .jpeg, .bmp"
+                            id="menu_images"
+                            name="menu_images"
+                            multiple
+                            required
+                        />
+                        <button
+                            type="submit"
+                            data-submit-button="Загрузить"
+                            class="btn btn-primary ms-2"
+                        >
+                            Загрузить
+                        </button>
+                    </form>
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="processSelectedImages()"
+                    >
+                        Сохранить
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Gallery modal -->
+
+<!-- Confirm deletion modal -->
+<div
+    class="modal fade"
+    id="confirmModal"
+    tabindex="-1"
+    aria-labelledby="userModalLabel"
+    aria-hidden="true"
+    data-mdb-backdrop="false"
+>
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content p-3">
+            <h5 class="modal-title pb-2" id="userModalLabel">Вы уверенны?</h5>
+            <div class="modal-body d-flex justify-content-between p-0">
+                <button
+                    type="submit"
+                    class="btn btn-flat btn-sm px-3"
+                    data-ripple-color="dark"
+                    data-mdb-dismiss="modal"
+                    aria-label="Close"
+                >
+                    Отмена
+                </button>
+                <button
+                    type="submit"
+                    class="btn btn-primary btn-sm px-3"
+                    data-ripple-color="dark"
+                    data-submit-button="Ок"
+                    onclick="deleteGalleryImg(this)"
+                >
+                    Ок
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Confirm deletion modal -->
+
+<!-- ########################### Menu page ############################## -->
+
+{% endblock %}
+<!--  -->
+{% block scripts %}
+<!-- scripts -->
+<script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/admin/admin_menu.js') }}"
+></script>
+<script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/admin/admin_utils.js') }}"
+></script>
+<script
+    type="text/javascript"
+    src="{{ url_for('client.static',filename='js/admin/admin_sort.js') }}"
+></script>
+{% endblock %}

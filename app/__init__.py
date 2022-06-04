@@ -36,6 +36,9 @@ app.register_blueprint(client)
 
 ##### server side blueprints #####
 
+# Import the application views
+from app import views
+
 # здесь будет api/auth системы
 from app.api.auth.views import auth
 

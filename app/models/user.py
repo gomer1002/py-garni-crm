@@ -83,7 +83,11 @@ class User(MethodView):
                 ref.update(self.serialize())
             else:
                 ref.set(self.serialize(with_register=True))
-            additional_claims = {"rights": self.rights, "role": self.role}
+            additional_claims = {
+                "rights": self.rights,
+                "role": self.role,
+                "name": self.name,
+            }
             return create_access_token(
                 identity=self.user_id, additional_claims=additional_claims
             )
@@ -104,6 +108,7 @@ class User(MethodView):
                     additional_claims = {
                         "rights": user["data"]["rights"],
                         "role": user["data"]["role"],
+                        "name": user["data"]["name"],
                     }
                     return create_access_token(
                         identity=user_id, additional_claims=additional_claims

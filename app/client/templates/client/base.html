@@ -16,54 +16,92 @@
         />
         <!-- Подключение стилей MDB -->
         <link
-            href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.css"
+            href="{{ url_for('client.static',filename='css/mdb.min.css') }}"
             rel="stylesheet"
         />
+
         <!-- Подключение своих стилей -->
-        <link
-            href="{{ url_for('client.static',filename='css/styles.css') }}"
-            rel="stylesheet"
-        />
+        {% block styles %}
+        <!-- Стили -->
+        {% endblock %}
+        <!-- Подключение своих стилей -->
+
         <link
             rel="icon"
             type="image/png"
-            href="{{ url_for('client.static',filename='img/logo-restaurant-w.svg') }}"
+            href="{{ url_for('client.static',filename='favicon/garni_favicon.svg') }}"
         />
         <title>{% block title %}{% endblock %}</title>
     </head>
 
-    {% block content %}
-    <!-- Сюда будут вставляться все страницы системы -->
-    {% endblock %}
+    <body>
+        {% block body %}
+        <!-- Сюда будут вставляться все страницы системы -->
+        {% endblock %}
 
-    <!-- Подключение скриптов MDB -->
-    <script
-        type="text/javascript"
-        src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.10.2/mdb.min.js"
-    ></script>
-    <!-- Подключение библиотеки axios -->
-    <script
-        type="text/javascript"
-        src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"
-    ></script>
-    <!-- Подключение библиотеки для работы с md5 -->
-    <script
-        type="text/javascript"
-        src="{{ url_for('client.static',filename='js/utils_md5.js') }}"
-    ></script>
-    <!-- Подключение библиотеки для работы с cookie -->
-    <script
-        type="text/javascript"
-        src="{{ url_for('client.static',filename='js/utils_cookie.js') }}"
-    ></script>
-    <!-- Подключение библиотеки для автовыхода из учетной записи log out -->
-    <script
-        type="text/javascript"
-        src="{{ url_for('client.static',filename='js/utils_log_out.js') }}"
-    ></script>
-    <!-- Подключение библиотеки базовых функций, использующихся везде в проекте -->
-    <script
-        type="text/javascript"
-        src="{{ url_for('client.static',filename='js/utils_main.js') }}"
-    ></script>
+        <!-- Подключение скриптов jQuery -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/jquery/jquery.min.js') }}"
+        ></script>
+        <!-- Подключение скриптов BootStrap -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/bootstrap/bootstrap.min.js') }}"
+        ></script>
+        <!-- Подключение скриптов MDB -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/mdb/mdb.min.js') }}"
+        ></script>
+        <!-- Подключение плагинов jQuery
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/jquery/plugin.js') }}"
+        ></script> -->
+        <!-- Подключение Owl Carousel -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/owl/owl.carousel.min.js') }}"
+        ></script>
+        <!-- Подключение Classy Nav js -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/classy_nav/classy-nav.min.js') }}"
+        ></script>
+        <!-- Подключение библиотеки axios -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/axios/axios.min.js') }}"
+        ></script>
+        <!-- Подключение библиотеки для работы с md5 -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/utils/utils_md5.js') }}"
+        ></script>
+        <!-- Подключение библиотеки для работы с cookie -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/utils/utils_cookie.js') }}"
+        ></script>
+        <!-- Подключение библиотеки для автовыхода из учетной записи log out -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/utils/utils_log_out.js') }}"
+        ></script>
+        <!-- Подключение библиотеки базовых функций, использующихся везде в проекте -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/utils/utils_main.js') }}"
+        ></script>
+        <!-- Подключение ???? -->
+        <script
+            type="text/javascript"
+            src="{{ url_for('client.static',filename='js/active.js') }}"
+        ></script>
+
+        {% block scripts %}
+        <!-- Сюда будут вставляться все скрипты страниц -->
+        {% endblock %}
+    </body>
 </html>

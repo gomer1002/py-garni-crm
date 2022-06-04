@@ -54,33 +54,38 @@ def kitchen_page():
     Страница кухни
     :return:
     """
+    target = "main"
+    target_list = {
+        "main": "client/kitchen_main.html",
+        "login": "client/kitchen_login.html",
+    }
     claims = get_jwt()
-    show_login = True
-    auth_message = ""
+    options = {"show_login": True, "auth_message": ""}
+
     if claims.get("rights"):
         if Right.access_kitchen_panel in claims.get("rights"):
-            show_login = False
+            options["show_login"] = False
         else:
-            auth_message = "Для доступа к данным недостаточно прав."
-    return make_response(
-        render_template(
-            "client/kitchen.html", show_login=show_login, auth_message=auth_message
-        )
-    )
+            options["auth_message"] = "Для доступа к данным недостаточно прав."
+    else:
+        target = "login"
+    return make_response(render_template(target_list[target], **options))
 
 
 @client.route("/admin/")
 @client.route("/admin/<string:target>/")
 @jwt_required(optional=True)
-def admin_page(target=None):
+def admin_page(target="users"):
     """
     Админ панель
     :return:
     """
     target_list = {
-        "users": "users_page",
-        "storage": "storage_page",
-        "menu": "menu_page",
+        "main": "client/admin_main.html",
+        "users": "client/admin_users.html",
+        "storage": "client/admin_storage.html",
+        "menu": "client/admin_menu.html",
+        "login": "client/admin_login.html",
     }
     claims = get_jwt()
     options = {"show_login": True, "auth_message": ""}
@@ -88,18 +93,11 @@ def admin_page(target=None):
     if claims.get("rights"):
         if Right.access_admin_panel in claims.get("rights"):
             options["show_login"] = False
-            if target in target_list.keys():
-                options[target_list[target]] = True
         else:
             options["auth_message"] = "Для доступа к данным недостаточно прав."
-    return make_response(render_template("client/admin.html", **options))
-
-
-@client.route("/test/")
-def some_test():
-    print("TEST FORM VALUES", request.values)
-    print("TEST FORM JSON", request.get_json())
-    return make_response(redirect(url_for("client.admin_page")))
+    else:
+        target = "login"
+    return make_response(render_template(target_list[target], **options))
 
 
 ################### dummy purshare ##################################
