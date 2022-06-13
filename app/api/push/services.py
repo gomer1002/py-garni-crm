@@ -5,10 +5,6 @@ from app.models.user import User
 from pywebpush import webpush, WebPushException
 
 VAPID_PRIVATE_KEY = app.config.get("DER_BASE64_ENCODED_PRIVATE_KEY")
-VAPID_CLAIMS = {
-    "sub": "mailto:chubaka1002@gmail.com",
-    # "aud": "https://garni-24.ru:8000",
-}
 
 
 def subscribe_user(token, user_id):
@@ -33,28 +29,27 @@ def get_token_list(user_id):
 def send_web_push(user_id: str, message_data: str | dict):
     token_list = get_token_list(user_id=user_id)
     answer_list = []
+    valid_tokens = []
     if isinstance(token_list, list):
         for token in token_list:
             try:
-                print("SUB INFO", token)
-                print("MESSAGE BODY", json.dumps(message_data))
+                # print("SUB INFO", type(token), token)
+                # print("MESSAGE BODY", json.dumps(message_data))
                 response = webpush(
                     subscription_info=token,
                     data=json.dumps(message_data),
                     vapid_private_key=VAPID_PRIVATE_KEY,
-                    vapid_claims=VAPID_CLAIMS,
+                    vapid_claims={"sub": "mailto:chubaka1002@gmail.com"},
                 )
-                print("PUSH RESPONSE", response)
-                answer_list.append(response.ok)
+                print("PUSH RESPONSE", response.status_code)
+                valid_tokens.append(token)
             except WebPushException as e:
-                if e.response and e.response.json():
-                    extra = e.response.json()
-                    print(
-                        "Remote service replied with a {}:{}, {}",
-                        extra.code,
-                        extra.errno,
-                        extra.message,
-                    )
-                logger.error(str(e))
-                answer_list.append(False)
-        print("WEB PUSH ANSWER LIST", answer_list)
+                pass
+                # print(e.response.status_code)
+                msg = e.response.text
+                if "{" in e.response.text:
+                    msg = json.loads(e.response.text)["message"]
+                logger.error(f"{e.response.status_code}:{msg}")
+                # answer_list.append(False)
+        # print("WEB PUSH ANSWER LIST", answer_list)
+        User(user_id=user_id, rights=False, push_data=valid_tokens).save()

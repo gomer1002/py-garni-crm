@@ -5,10 +5,11 @@ let storageData = {};
 let ordersData = {};
 let userData = {};
 let menuData = {};
-
-function removeWarning(elem) {
-    elem.closest(".container").style.display = "none";
-}
+let typeMessages = {
+    delivery: "Доставка",
+    pickup: "С собой",
+    dine_in: "В зале",
+};
 
 function confirmOrder(elem) {
     let order_id = elem.dataset.orderId;
@@ -51,7 +52,13 @@ function confirmOrder(elem) {
         });
 }
 
-function getOrderCard(order_id, order_id_short, order_date, order_items_list) {
+function getOrderCard(
+    order_id,
+    order_id_short,
+    order_type,
+    order_date,
+    order_items_list
+) {
     let date_string = order_date.toLocaleDateString("ru-RU");
     let time_string = order_date.toLocaleTimeString("ru-RU");
     return `
@@ -65,6 +72,7 @@ function getOrderCard(order_id, order_id_short, order_date, order_items_list) {
                 <div class="order-desc">
                     <h4>Заказ #${order_id_short}</h4>
                     <p class="order-date">${time_string} ${date_string}</p>
+                    <p class="order-type">${typeMessages[order_type]}</p>
                 </div>
                 <div class="order-btn">
                     <button 
@@ -146,12 +154,13 @@ function reloadOrdersCartList() {
     }).then((data) => {
         ordersData = data;
         renderOrderCards();
+        setUpOrderTimers();
     });
 }
 
 function pushOrderCard(order_id, order_card) {
     let div = document.createElement("div");
-    div.classList = ["col-12 col-sm-4 col-lg-4 mt-3 px-2 card-wrapper"];
+    div.classList = ["col-12 col-md-6 col-xl-4 mt-3 px-2 card-wrapper"];
     div.id = `order_${order_id}`;
     div.innerHTML = order_card;
     document.querySelector("#orderContainer").appendChild(div);
@@ -206,6 +215,7 @@ function renderOrderCards() {
         let finally_order_card = getOrderCard(
             order_id,
             order_id_short,
+            order_type,
             order_date,
             order_data_string
         );

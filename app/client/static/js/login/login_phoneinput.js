@@ -1,19 +1,19 @@
 document.addEventListener("DOMContentLoaded", initPhoneInput);
 
 function initPhoneInput() {
-    let phoneInputs = document.querySelectorAll('input[data-tel-input]');
+    let phoneInputs = document.querySelectorAll("input[data-tel-input]");
 
-    let getInputNumbersValue = function(input) {
+    let getInputNumbersValue = function (input) {
         // Return stripped input value — just numbers
-        return input.value.replace(/\D/g, '');
-    }
+        return input.value.replace(/\D/g, "");
+    };
 
-    let onPhonePaste = function(e) {
+    let onPhonePaste = function (e) {
         let input = e.target,
             inputNumbersValue = getInputNumbersValue(input);
         let pasted = e.clipboardData || window.clipboardData;
         if (pasted) {
-            let pastedText = pasted.getData('Text');
+            let pastedText = pasted.getData("Text");
             if (/\D/g.test(pastedText)) {
                 // Attempt to paste non-numeric symbol — remove all non-numeric symbols,
                 // formatting will be in onPhoneInput handler
@@ -21,25 +21,47 @@ function initPhoneInput() {
                 return;
             }
         }
-    }
+    };
 
-    let onPhoneInput = function(e) {
+    let onPhoneInput = function (e) {
         if (e.target.validity.tooShort) {
-            e.target.setCustomValidity('Телефон должен быть минимум ' + event.target.minLength + ' символов.');
+            e.target.setCustomValidity(
+                "Телефон должен быть минимум " +
+                    event.target.minLength +
+                    " символов."
+            );
         } else if (e.target.validity.patternMismatch) {
-            e.target.setCustomValidity('Данные не соответствуют формату');
+            e.target.setCustomValidity("Данные не соответствуют формату");
         } else {
             e.target.setCustomValidity("");
         }
-        let input = e.target,
-            inputNumbersValue = getInputNumbersValue(input),
-            selectionStart = input.selectionStart,
-            formattedInputValue = "";
-
-        if (!inputNumbersValue) {
-            return input.value = "";
+        formatPhone(e.target, e);
+    };
+    let onPhoneKeyDown = function (e) {
+        // Clear input after remove last symbol
+        let inputValue = e.target.value.replace(/\D/g, "");
+        if (e.keyCode == 8 && inputValue.length == 1) {
+            e.target.value = "";
         }
+    };
+    for (let phoneInput of phoneInputs) {
+        phoneInput.addEventListener("keydown", onPhoneKeyDown);
+        phoneInput.addEventListener("input", onPhoneInput, false);
+        phoneInput.addEventListener("paste", onPhonePaste, false);
+    }
+}
 
+function formatPhone(elem, e = false) {
+    let input = elem,
+        inputNumbersValue = input.value.replace(/\D/g, ""),
+        selectionStart = input.selectionStart,
+        formattedInputValue = "";
+
+    if (!inputNumbersValue) {
+        return (input.value = "");
+    }
+
+    if (e) {
         if (input.value.length != selectionStart) {
             // Editing in the middle of input, not last symbol
             if (e.data && /\D/g.test(e.data)) {
@@ -48,66 +70,24 @@ function initPhoneInput() {
             }
             return;
         }
-
-        if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
-            if (inputNumbersValue[0] == "9") inputNumbersValue = "7" + inputNumbersValue;
-            let firstSymbols = (inputNumbersValue[0] == "8") ? "8" : "+7";
-            formattedInputValue = input.value = firstSymbols + " ";
-            if (inputNumbersValue.length > 1) {
-                formattedInputValue += '(' + inputNumbersValue.substring(1, 4);
-            }
-            if (inputNumbersValue.length >= 5) {
-                formattedInputValue += ') ' + inputNumbersValue.substring(4, 7);
-            }
-            if (inputNumbersValue.length >= 8) {
-                formattedInputValue += '-' + inputNumbersValue.substring(7, 9);
-            }
-            if (inputNumbersValue.length >= 10) {
-                formattedInputValue += '-' + inputNumbersValue.substring(9, 11);
-            }
-        } else {
-            // formattedInputValue = '+' + inputNumbersValue.substring(0, 16);
-        }
-        input.value = formattedInputValue;
-    }
-    let onPhoneKeyDown = function(e) {
-        // Clear input after remove last symbol
-        let inputValue = e.target.value.replace(/\D/g, '');
-        if (e.keyCode == 8 && inputValue.length == 1) {
-            e.target.value = "";
-        }
-    }
-    for (let phoneInput of phoneInputs) {
-        phoneInput.addEventListener('keydown', onPhoneKeyDown);
-        phoneInput.addEventListener('input', onPhoneInput, false);
-        phoneInput.addEventListener('paste', onPhonePaste, false);
-    }
-}
-
-function formatPhone(elem) {
-    let input = elem,
-        inputNumbersValue = input.value.replace(/\D/g, ''),
-        formattedInputValue = "";
-
-    if (!inputNumbersValue) {
-        return input.value = "";
     }
 
     if (["7", "8", "9"].indexOf(inputNumbersValue[0]) > -1) {
-        if (inputNumbersValue[0] == "9") inputNumbersValue = "7" + inputNumbersValue;
-        let firstSymbols = (inputNumbersValue[0] == "8") ? "8" : "+7";
+        if (inputNumbersValue[0] == "9")
+            inputNumbersValue = "7" + inputNumbersValue;
+        let firstSymbols = inputNumbersValue[0] == "8" ? "8" : "+7";
         formattedInputValue = input.value = firstSymbols + " ";
         if (inputNumbersValue.length > 1) {
-            formattedInputValue += '(' + inputNumbersValue.substring(1, 4);
+            formattedInputValue += "(" + inputNumbersValue.substring(1, 4);
         }
         if (inputNumbersValue.length >= 5) {
-            formattedInputValue += ') ' + inputNumbersValue.substring(4, 7);
+            formattedInputValue += ") " + inputNumbersValue.substring(4, 7);
         }
         if (inputNumbersValue.length >= 8) {
-            formattedInputValue += '-' + inputNumbersValue.substring(7, 9);
+            formattedInputValue += "-" + inputNumbersValue.substring(7, 9);
         }
         if (inputNumbersValue.length >= 10) {
-            formattedInputValue += '-' + inputNumbersValue.substring(9, 11);
+            formattedInputValue += "-" + inputNumbersValue.substring(9, 11);
         }
     } else {
         // formattedInputValue = '+' + inputNumbersValue.substring(0, 16);

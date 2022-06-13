@@ -363,7 +363,7 @@ img {
     height: fit-content;
     -webkit-transition-duration: 800ms;
     transition-duration: 800ms;
-    transform: translateY(-100px);
+    transform: translateY(-500px);
     border-top: 1px solid #ebebeb;
 }
 .filters-wrapper.show {

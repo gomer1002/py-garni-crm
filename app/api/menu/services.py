@@ -63,9 +63,9 @@ def allowed_file(filename):
 def upload_files(file_list: list) -> dict:
     """Загрузка файлов в хранилище и получение списка ссылок на файлы"""
     ans = []
-    print("INPUT FILE LIST", file_list)
+    # print("INPUT FILE LIST", file_list)
     for file in file_list:
-        print("EACH FILE", file)
+        # print("EACH FILE", file)
         if file and allowed_file(file.filename):
             # делаем файл безопасным
             sys_filename = secure_filename(file.filename)

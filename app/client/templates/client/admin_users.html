@@ -12,7 +12,7 @@
 {% block body %}
 
 <!-- ########################### Admin Nav Bar ########################## -->
-{% include "client/admin_nav.html" %}
+{% import "client/admin_nav.html" as admin_nav %} {{ admin_nav.nav(True) }}
 <!-- ########################### Admin Nav Bar ########################## -->
 
 <!-- ########################### User List Tab ########################## -->
@@ -20,7 +20,7 @@
     <div class="row px-3">
         <div class="d-flex flex-row input px-0 pb-2" style="width: 100%">
             <input
-                type="text"
+                type="search"
                 name="search"
                 class="form-control"
                 placeholder="Поиск"
@@ -83,6 +83,9 @@
                             data-tel-input
                             class="form-control"
                             placeholder="+7 (___) ___-__-__"
+                            pattern="(\+7|8) \((\d){3}\) (\d){3}(-(\d){2}){2}"
+                            minlength="11"
+                            maxlength="18"
                             required=""
                         />
                         <label class="form-label">Номер телефона</label>
@@ -93,6 +96,7 @@
                         <input
                             type="password"
                             name="user_password"
+                            id="registerPassword"
                             class="form-control"
                             pattern="([A-Za-z0-9_-]{8,})$"
                             minlength="8"
@@ -103,7 +107,12 @@
 
                     <!-- Repeat Password input -->
                     <div class="form-outline mb-4">
-                        <input type="password" class="form-control" required />
+                        <input
+                            type="password"
+                            id="registerRepeatPassword"
+                            class="form-control"
+                            required
+                        />
                         <label class="form-label">Пароль еще раз</label>
                     </div>
 

@@ -23,7 +23,8 @@ def get_user_list_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.access_admin_panel in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.read_users in user_rights:
         user_id = request.values.get("user_id")
         data = {}
         if isinstance(user_id, str):
@@ -48,7 +49,8 @@ def get_rights_list_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.access_admin_panel in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.read_users in user_rights:
         data = Right.get_list()
         return response(
             "success",
@@ -66,8 +68,9 @@ def update_existing_user_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
+    user_rights = claims.get("rights")
     logged_user_id = claims.get("sub")
-    if Right.access_admin_panel in claims.get("rights"):
+    if Right.access_admin_panel in user_rights and Right.edit_users in user_rights:
         if request.content_type == "application/json":
             data = request.get_json()
             if validate_update_data(data):
@@ -96,7 +99,8 @@ def set_new_user_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.access_admin_panel in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.edit_users in user_rights:
         if request.content_type == "application/json":
             data = request.get_json()
             if validate_request_data(data, register=True):
@@ -116,8 +120,9 @@ def del_user_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
+    user_rights = claims.get("rights")
     logged_user_id = claims.get("sub")
-    if Right.access_admin_panel in claims.get("rights"):
+    if Right.access_admin_panel in user_rights and Right.edit_users in user_rights:
         if request.content_type == "application/json":
             data = request.get_json()
             user_id_for_del = data.get("user_id")

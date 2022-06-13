@@ -19,6 +19,7 @@ let menuImageGaleryModalMdb;
 
 let confirmModal;
 let confirmModalMdb;
+
 function getFileNameFromURL(url) {
     let name = url.replace(
         url.slice(0, url.indexOf("appspot.com/")) + "appspot.com/",
@@ -46,11 +47,11 @@ function getGalleryInnerImg(url, selection = false) {
                     ? `
                     <i
                         class="far fa-lg fa-check-circle img-select"
-                        onclick="this.parentNode.classList.add('selected')"
+                        onclick="addClass(this.parentNode, 'selected')"
                     ></i>
                     <i
                         class="fas fa-lg fa-check-circle img-selected"
-                        onclick="this.parentNode.classList.remove('selected')"
+                        onclick="removeClass(this.parentNode, 'selected')"
                     ></i>
                     <div class="d-flex flex-fill justify-content-end">
                         <i
@@ -70,7 +71,7 @@ function getGalleryInnerImg(url, selection = false) {
             }
         </div>
         <img
-            onclick="toggleImgShow(this)"
+            onclick="toggleClass(this.closest('.galery-img'), 'zoom')"
             class="img-fluid"
             src="${url}"
         />
@@ -119,14 +120,16 @@ function getTagsElem(item_tags) {
     <!-- Tags input -->
     <a
         href="#"
-        class="text-dark dropdown-toggle"
+        class="text-dark form-control dropdown-toggle"
         type="button"
         data-mdb-toggle="dropdown"
         aria-expanded="false"
         data-mdb-auto-close="outside"
-        ><i
-            class="fas fa-lg fa-list-ul tag-dropdown-toggle"
-        ></i
+        >
+            <span class="me-1 fs-6 fw-light">Теги</span>
+            <i
+                class="fas fa-lg fa-list-ul tag-dropdown-toggle"
+            ></i
     ></a>
     <div
         class="dropdown-menu p-2"
@@ -179,7 +182,7 @@ function processSelectedImages() {
     item_id = item_id == "" ? null : item_id;
     // let image_urls = [];
     for (let elem of images) {
-        elem.classList.remove("selected");
+        removeClass(elem, "selected");
         let url = elem.parentNode.querySelector("img").src;
         if (menuData[item_id].img_urls.indexOf(url) == -1) {
             menuData[item_id].img_urls.push(url);
@@ -277,15 +280,6 @@ function toggleImgGaleryModal(elem) {
     menuImageGaleryModalMdb.show();
 }
 
-function toggleImgShow(elem) {
-    let target = elem.closest(".galery-img");
-    if (target.classList.contains("zoom")) {
-        target.classList.remove("zoom");
-    } else {
-        target.classList.add("zoom");
-    }
-}
-
 function destroyImg(elem) {
     let item_galery = elem.closest(".item-galery");
     let placeholder_elem = item_galery.querySelector(".img-placeholder");
@@ -341,7 +335,7 @@ function getMenuCategoriesList() {
     return categories.sort();
 }
 
-function getMenuTagsContainerInnerHTML(item_tags, disabled = true) {
+function getMenuTagsContainerInnerHTML(item_tags) {
     let getTagsList = (item_tags) => {
         let ans_list = ``;
         if (item_tags) {
@@ -481,7 +475,7 @@ function menuItemSaveChanges(event) {
     if (composition.length == 0) {
         showAlert({
             message: "Необходимо добавить минимум один ингредиент!",
-            type: "danger",
+            type: "warning",
         });
         return;
     }
@@ -495,7 +489,7 @@ function menuItemSaveChanges(event) {
     if (img_urls.length == 0) {
         showAlert({
             message: "Необходимо добавить минимум одно изображение!",
-            type: "danger",
+            type: "warning",
         });
         return;
     }
@@ -510,13 +504,13 @@ function menuItemSaveChanges(event) {
             tags_list.push(elem.value);
         }
     }
-    if (tags_list.length == 0) {
-        showAlert({
-            message: "Необходимо добавить минимум один тэг!",
-            type: "danger",
-        });
-        return;
-    }
+    // if (tags_list.length == 0) {
+    //     showAlert({
+    //         message: "Необходимо добавить минимум один тэг!",
+    //         type: "warning",
+    //     });
+    //     return;
+    // }
 
     // собираем запрос в кучу
     let path = "/api/memu/update";
@@ -561,14 +555,14 @@ function menuItemSaveChanges(event) {
 }
 
 function destroyMenuIngredientRecord(elem) {
-    let form = elem.closest("form");
-    elem.closest(".list-group-item").remove();
-    let submit_btn = form.querySelector("[data-submit-button]");
-    print(submit_btn);
-    let records = form.querySelector(".item-record");
-    if (!records) {
-        toggleVisibility(submit_btn);
-    }
+    elem.closest(".ingredient-item").remove();
+    // let form = elem.closest("form");
+    // let submit_btn = form.querySelector("[data-submit-button]");
+    // print(submit_btn);
+    // let records = form.querySelector(".ingredient-item");
+    // if (!records) {
+    //     switchElem(submit_btn, "off");
+    // }
 }
 
 function renderRecordList(composition) {
@@ -656,11 +650,11 @@ function createMenuRecord(elem) {
         }
     }
     form.appendChild(getIngredientRecord());
-    let submit_btn = form.parentNode.querySelector("[data-submit-button]");
-    let records = form.querySelector(".item-record");
-    if (records) {
-        submit_btn.classList.remove("display-none");
-    }
+    // let submit_btn = form.parentNode.querySelector("[data-submit-button]");
+    // let records = form.querySelector(".ingredient-item");
+    // if (records) {
+    //     switchElem(submit_btn, "on");
+    // }
 }
 
 function renderMenuSelectList(selected_ingredient_id = "") {
@@ -699,7 +693,7 @@ function processMenuData(event) {
             elem.value = "";
             showAlert({
                 message: "Данный ингредиент уже добавлен!",
-                type: "danger",
+                type: "warning",
             });
         }
     }
@@ -875,7 +869,7 @@ function renderMenuList() {
             
             <!-- Item tags -->
             <div class="col-1 dropdown tags-container">
-                ${getMenuTagsContainerInnerHTML(data.tags, true)}
+                ${getMenuTagsContainerInnerHTML(data.tags)}
             </div>
 
             <!-- Item category -->

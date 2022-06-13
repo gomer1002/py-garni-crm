@@ -1,3 +1,4 @@
+{% macro nav(links = False) -%}
 <!-- ##### Header Area Start ##### -->
 <header class="header_wrapper">
     <div class="container py-0">
@@ -14,6 +15,7 @@
                             alt=""
                         />
                     </a>
+                    {% if links %}
                     <!-- Navbar Toggler -->
                     <div class="classy-navbar-toggler">
                         <span class="navbarToggler"
@@ -38,17 +40,20 @@
                         </div>
                         <!-- Nav End -->
                     </div>
+                    {% endif %}
                 </nav>
 
                 <!-- Header Meta Data -->
                 <div class="header-meta d-flex clearfix justify-content-end">
-                    <!-- User Login Info -->
+                    {% if links %}
+                    <!-- Reload area -->
                     <div class="user-login-info">
                         <a href="#" onclick="reloadOrdersCartList()">
                             <i class="fas fa-lg fa-redo"></i>
                         </a>
                     </div>
-                    <!-- Cart Area -->
+                    {% endif %}
+                    <!-- Log out area -->
                     <div class="cart-area">
                         <a href="#" onclick="log_out_me('/kitchen')"
                             ><i class="fas fa-lg fa-sign-out-alt"></i>
@@ -60,7 +65,9 @@
     </div>
 </header>
 <!-- ##### Header Area End ##### -->
+{% if links %}
 <script
     type="text/javascript"
     src="{{ url_for('client.static',filename='js/utils/utils_nav_clock.js') }}"
 ></script>
+{% endif %} {%- endmacro %}

@@ -48,4 +48,6 @@ def check_if_token_is_revoked(jwt_header, jwt_payload):
 
 @jwt.revoked_token_loader
 def response_if_token_is_revoked(jwt_header, jwt_payload):
-    return response("failed", "Token has been revoked but custom msg", 401)
+    return response(
+        "failed", "Для доступа требуется повторно авторизоваться в системе", 401
+    )

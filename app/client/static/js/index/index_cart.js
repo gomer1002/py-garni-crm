@@ -118,24 +118,50 @@ function recountCart() {
     }
     totalQty = 0;
     totalPrice = 0;
+    let has_change = false;
     for (let key of Object.keys(cartData)) {
-        updateMenuItemButton(key, "В корзине");
-        let one_item_price = cartData[key].price;
-        let items_price = cartData[key].qty * one_item_price;
-        let items_qty = cartData[key].qty;
+        if (menuData[key]) {
+            if (menuData[key].show && menuData[key].available_to_order) {
+                updateMenuItemButton(key, "В корзине");
+                let one_item_price = cartData[key].price;
+                let items_price = cartData[key].qty * one_item_price;
+                let items_qty = cartData[key].qty;
 
-        totalQty += items_qty;
-        totalPrice += items_price;
-        if (!document.querySelector(`#cart_item_${key}`)) {
-            renderCartItem(cartData[key]);
+                totalQty += items_qty;
+                totalPrice += items_price;
+                if (!document.querySelector(`#cart_item_${key}`)) {
+                    renderCartItem(cartData[key]);
+                }
+                document.querySelector(`#item_qty_${key}`).innerHTML =
+                    items_qty;
+            } else {
+                showAlert({
+                    message: `Товар "${menuData[key].item_name}" из вашей корзины в данный момент недоступен для заказа. Приносим извенения за неудобства. Нажми стобы скрыть`,
+                    type: "info",
+                    auto_dispose: false,
+                });
+                delete cartData[key];
+                has_change = true;
+                continue;
+            }
+        } else {
+            delete cartData[key];
+            has_change = true;
         }
-        document.querySelector(`#item_qty_${key}`).innerHTML = items_qty;
     }
     updateCartQtyBadge(totalQty);
     document.querySelector("#cartTotal").innerHTML = `${totalPrice.toFixed(
         2
     )}&nbsp;₽`;
     hideNoteEmptyCart();
+    if (has_change) {
+        localStorage.setItem("user_cart", JSON.stringify(cartData));
+        if (Object.keys(cartData).length == 0) {
+            showNoteEmptyCart();
+            updateCartQtyBadge(0);
+            return;
+        }
+    }
 }
 
 function changeOrderForm() {

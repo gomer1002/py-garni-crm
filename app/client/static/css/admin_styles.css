@@ -52,8 +52,8 @@ a:focus {
     text-decoration: none;
     outline: 0 solid transparent;
     color: #000000;
-    font-weight: 600;
-    font-size: 12px;
+    /* font-weight: 600; */
+    /* font-size: 12px; */
 }
 
 ul,
@@ -443,7 +443,12 @@ img {
 .list-group-item.menu-header > span,
 .list-group-item.menu-header > div > span {
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+    text-align: center;
+}
+.list-group-item.menu-header > div > span {
+    display: flex;
+    justify-content: center;
     align-items: center;
     text-align: center;
 }
@@ -464,6 +469,7 @@ img {
 .list-group-item > span {
     display: flex;
     justify-content: center;
+    align-items: center;
 }
 
 @media only screen and (max-width: 576px) {
@@ -624,6 +630,7 @@ span[data-sort-direction]:hover {
     max-width: 100%;
     height: 85%;
     object-fit: cover;
+    width: 100%;
 }
 
 .galery-img:hover {
@@ -655,13 +662,18 @@ span[data-sort-direction]:hover {
 .galery-img .img-controls {
     z-index: 100;
     position: relative;
-    float: right;
-    top: 2px;
-    height: 0;
+    /* float: right; */
+    /* top: 2px; */
+    height: 22px;
+    margin-bottom: -22px;
+    padding: 0.25rem;
     display: flex;
     justify-content: space-between;
     width: 100%;
-    color: rgb(164, 184, 53);
+    color: rgb(227, 141, 31);
+    background-color: rgba(0, 0, 0, 0.8);
+    /* box-shadow: 1px 2px 5px 1px rgba(0, 0, 0, 0.7),
+        0 2px 10px 0 rgb(0 0 0 / 20%); */
 }
 
 .galery-img .img-hover {
@@ -698,7 +710,7 @@ span[data-sort-direction]:hover {
 
 /* Kitchen page styles */
 .card-body {
-    height: 250px;
+    height: 350px;
     box-shadow: 0 2px 5px 0 rgb(0 0 0 / 20%), 0 2px 10px 0 rgb(0 0 0 / 10%);
     background-color: white;
     overflow-y: auto;
@@ -723,14 +735,19 @@ span[data-sort-direction]:hover {
 }
 .order-desc h4,
 .order-desc .order-date,
+.order-desc .order-type,
 .order-btn .order-timer {
     padding: 0;
     margin: 0;
 }
 .order-desc .order-date,
+.order-desc .order-type,
 .order-btn .order-timer {
     font-size: smaller;
     font-family: monospace;
+}
+.order-desc .order-type {
+    color: #000000;
 }
 .order-btn .order-timer {
     color: rgb(196, 95, 95);

@@ -2,13 +2,12 @@ import uuid
 
 from app.services import get_time
 from app import logger
+from app import firestore_db
 
-from firebase_admin import firestore
 from firebase_admin.exceptions import FirebaseError
-from flask.views import MethodView
 
 
-class Storage(MethodView):
+class Storage:
     """
     Table schema
     """
@@ -34,7 +33,6 @@ class Storage(MethodView):
         self.updated_on_unix = get_time(get_timestamp=True)
 
     def ref(self):
-        firestore_db = firestore.client()
         data_reference = f"{self.__tablename__}/{self.ingredient_id}"
         ref = firestore_db.document(data_reference)
         return ref
@@ -83,7 +81,6 @@ class Storage(MethodView):
         иначе список всех элементов. В случае ошибки возвращает None.
         """
         try:
-            firestore_db = firestore.client()
             if ingredient_id:
                 ref = firestore_db.collection(cls.__tablename__).document(ingredient_id)
                 doc = ref.get()
@@ -95,7 +92,7 @@ class Storage(MethodView):
                 ref = firestore_db.collection(cls.__tablename__)
                 # ref = ref.order_by("updated_on_unix", direction="DESCENDING")
 
-                docs = ref.get()
+                docs = ref.stream()
                 data = {}
                 for doc in docs:
                     data[doc.id] = doc.to_dict()

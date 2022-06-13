@@ -13,7 +13,7 @@ def validate_request_data(
     """Проверка полученных данных"""
     if create:
         items_list = post_data.get("items_list")
-        print("ORDER VALIDATOR ITEM LIST", items_list)
+        # print("ORDER VALIDATOR ITEM LIST", items_list)
         order_type = post_data.get("order_type")
         delivery_addres = post_data.get("delivery_addres")
         return (
@@ -124,7 +124,7 @@ def check_if_any_unpayed_orders_service(user_id):
 
 
 def get_user_order_service(
-    d: dict, auth_user_id: str, force: bool = False, light: bool = False
+    d: dict, auth_user_id: str, force: bool = False, heavy: bool = False
 ) -> NoneType | bool | dict:
     """
     Вспомогательный метод для получения информации о заказе.
@@ -146,7 +146,7 @@ def get_user_order_service(
         db_user_id = order_data.get(list(order_data)[0]).get("user_id")
 
         if db_user_id == auth_user_id or force:
-            if light:
+            if heavy:
                 for key in list(order_data):
                     items_list = []
                     for item in order_data[key].get("items_list"):
@@ -165,21 +165,8 @@ def get_user_order_service(
     return None
 
 
-def get_orders_list_service() -> NoneType | bool | dict:
-    """
-    Вспомогательный метод для получения информации о заказе.
-    :returns: dict с данными в случае успеха.
-    :returns: False в случае отсутствия прав доступа.
-    :returns: None в случае отсутствия данных."""
-    order_data = Order.get()
-    if isinstance(order_data, dict):
-        for order_id in order_data.keys():
-            one_order = get_user_order_service(
-                external_order_data=order_data.get(order_id)
-            )
-            order_data[order_id] = one_order
-        return order_data
-    return None
+def delete_order_service(request_data):
+    return Order.delete(order_id=request_data.get("order_id"))
 
 
 def confirm_order_service(post_data, author):

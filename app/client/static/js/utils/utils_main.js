@@ -140,12 +140,12 @@ function renderScrollArrow(remove = false) {
     }
 }
 
-function showMessage(message, type) {
+function showMessage({ message = "", type = "", disposable = true } = {}) {
     let modal = document.querySelector("#messageModal");
     if (!modal) {
         let modal_container = document.createElement("div");
         modal_container.innerHTML = `
-        <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true" data-mdb-toggle="modal" data-mdb-target="#messageModal">
+        <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true" data-mdb-toggle="modal" data-mdb-target="#messageModal" style="pointer-events: none";>
             <div class="modal-dialog modal-dialog-centered modal-sm">
                 <div class="modal-content">
                     <div class="modal-body note d-flex justify-content-between">

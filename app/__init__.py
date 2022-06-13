@@ -1,6 +1,6 @@
 import os
 from flask import Flask
-from firebase_admin import credentials, initialize_app
+from firebase_admin import credentials, initialize_app, firestore, storage
 from flask_jwt_extended import JWTManager
 import redis
 from loguru import logger
@@ -19,6 +19,8 @@ jwt_redis_blocklist = redis.from_url(os.environ.get("REDIS_URL"))
 # firebase configuration
 cred = credentials.Certificate(app.config.get("FIREBASE_DATABASE")["serviceAccount"])
 initialize_app(cred, app.config.get("FIREBASE_DATABASE"))
+firestore_db = firestore.client()
+bucket = storage.bucket()
 
 ##### client side blueprints #####
 

@@ -24,7 +24,10 @@ def get_storage_items_list_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.read_storage in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.read_storage in claims.get(
+        "rights"
+    ):
         ingredient_id = request.values.get("ingredient_id")
         data = Storage.get(ingredient_id)
         return response(
@@ -43,7 +46,8 @@ def set_storage_items_list_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.edit_storage in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.edit_storage in user_rights:
         if request.content_type == "application/json":
             post_data = request.get_json()
             if validate_post_data_set(post_data):
@@ -73,7 +77,8 @@ def update_storage_item_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.edit_storage in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.edit_storage in user_rights:
         if request.content_type == "application/json":
             post_data = request.get_json()
             if validate_post_data_update(post_data):
@@ -99,7 +104,8 @@ def get_movement_items_list_view():
     :return: Json ответ или сообщение об ошибке
     """
     claims = get_jwt()
-    if Right.read_storage in claims.get("rights"):
+    user_rights = claims.get("rights")
+    if Right.access_admin_panel in user_rights and Right.read_storage in user_rights:
         get_data = request.values.to_dict()
         validated_get_data = validate_get_data(get_data)
         if validated_get_data:

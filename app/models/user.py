@@ -1,13 +1,11 @@
-from types import NoneType
 import bcrypt
 import uuid
 
 from app import app
 from app import logger
+from app import firestore_db
 
-from firebase_admin import firestore
 from firebase_admin.exceptions import FirebaseError
-from flask.views import MethodView
 
 from app.services import get_time
 from app.models.role import Role
@@ -15,9 +13,9 @@ from app.models.right import Right
 from flask_jwt_extended import create_access_token
 
 
-class User(MethodView):
+class User:
     """
-    Table schema
+    Модель пользователя.
     """
 
     __tablename__ = "users"
@@ -32,6 +30,8 @@ class User(MethodView):
         name=None,
         phone=None,
     ):
+        """Инициализация экземпляра класса пользователя.
+        :return: None."""
         self.user_id = user_id if user_id else str(uuid.uuid4())
         self.name = name
         self.phone = phone
@@ -39,22 +39,27 @@ class User(MethodView):
         self.role = role if role else Role.user
         self.rights = (
             rights
-            if rights
-            else [Right.access_user_panel, Right.place_order, Right.purshare_order]
+            if isinstance(rights, list) or isinstance(rights, bool)
+            else [
+                Right.access_user_panel,
+                Right.place_order,
+                Right.purchase_order,
+            ]
         )
         self.push_data = push_data
         self.registered_on = get_time()
         self.registered_on_unix = get_time(get_timestamp=True)
 
-    def serialize(self, with_register=False):
+    def serialize(self, with_register=False) -> dict:
+        """Сериализация экземпляра класса в словарь.
+        :return: dict."""
         data = {}
         if self.user_id:
             data["user_id"] = self.user_id
         if self.name:
             data["name"] = self.name
-        if self.rights:
+        if isinstance(self.rights, list):
             data["rights"] = self.rights
-            data["name"] = self.name
         if self.push_data:
             data["push_data"] = self.push_data
         if self.role:
@@ -74,11 +79,9 @@ class User(MethodView):
         """Запись пользователя в базу данных.
         :return: jwt токен или None."""
         try:
-            firestore_db = firestore.client()
             data_reference = f"{self.__tablename__}/{self.user_id}"
             ref = firestore_db.document(data_reference)
             doc = ref.get()
-            # print("USER SERIALIZE", self.serialize())
             if doc.exists:
                 ref.update(self.serialize())
             else:
@@ -89,7 +92,8 @@ class User(MethodView):
                 "name": self.name,
             }
             return create_access_token(
-                identity=self.user_id, additional_claims=additional_claims
+                identity=self.user_id,
+                additional_claims=additional_claims,
             )
         except (FirebaseError, ValueError) as e:
             logger.error(str(e))
@@ -111,7 +115,8 @@ class User(MethodView):
                         "name": user["data"]["name"],
                     }
                     return create_access_token(
-                        identity=user_id, additional_claims=additional_claims
+                        identity=user_id,
+                        additional_claims=additional_claims,
                     )
             return None
         except (ValueError) as e:
@@ -119,16 +124,17 @@ class User(MethodView):
             return None
 
     @staticmethod
-    def _pepper_password(password):
+    def _pepper_password(password: str) -> str:
         """Добавление к паролю пользователя локального секретного ключа.
-        :return: строка с локальным секретным ключем и исходной строкой."""
-        return (password + app.config.get("PEPPER")).encode("utf-8")
+        :return: str: строка с локальным секретным ключом и исходной строкой."""
+        pepper = app.config.get("PEPPER")
+        return f"{password}{pepper}".encode("utf-8")
 
     @staticmethod
-    def _salt_password(password):
+    def _salt_password(password: str) -> str:
         """Добавление к паролю пользователя локального уникального ключа
         и хэширование пароля с помощью алгоритма bcrypt.
-        :return: закодированная с помощью bcrypt строка."""
+        :return: str: закодированная с помощью bcrypt строка."""
         return bcrypt.hashpw(
             password,
             bcrypt.gensalt(),
@@ -136,14 +142,13 @@ class User(MethodView):
 
     @classmethod
     def get(cls):
-        """Получение данных пользователя по его id.
+        """Получение списка пользователей.
         :return: dict с данными о пользователе или None."""
         try:
-            firestore_db = firestore.client()
             ref = firestore_db.collection(cls.__tablename__)
             ref = ref.order_by("registered_on_unix", direction="DESCENDING")
 
-            docs = ref.get()
+            docs = ref.stream()
             data = {}
             k = 0
             for doc in docs:
@@ -168,7 +173,6 @@ class User(MethodView):
         """Получение данных пользователя по его id.
         :return: dict с данными о пользователе или None."""
         try:
-            firestore_db = firestore.client()
             ref = firestore_db.collection(cls.__tablename__).document(user_id)
             doc = ref.get()
             data = {}
@@ -180,34 +184,33 @@ class User(MethodView):
             return None
 
     @classmethod
-    def get_by_phone(cls, phone: str) -> dict | NoneType:
+    def get_by_phone(cls, phone: str) -> dict | None:
         """Получение данных пользователя по его телефону.
         :return: dict с данными о пользователе или None."""
         try:
-            firestore_db = firestore.client()
             ref = (
                 firestore_db.collection(cls.__tablename__)
                 .where("phone", "==", phone)
                 .limit(1)
             )
-            data = ref.get()
-            if len(data) != 0:
-                return {
-                    "user_id": data[0].id,
-                    "data": data[0].to_dict(),
-                }
-            else:
-                return None
+            docs = ref.stream()
+            for doc in docs:
+                if doc.exists:
+                    return {
+                        "user_id": doc.id,
+                        "data": doc.to_dict(),
+                    }
+                else:
+                    return None
         except (FirebaseError, ValueError) as e:
             logger.error(str(e))
             return None
 
     @classmethod
-    def delete(cls, user_id):
+    def delete(cls, user_id: str) -> bool | None:
         """Удаление пользователя из БД.
         :return: True или False."""
         try:
-            firestore_db = firestore.client()
             data_reference = f"{cls.__tablename__}/{user_id}"
             ref = firestore_db.document(data_reference)
             ref.delete()
@@ -217,11 +220,10 @@ class User(MethodView):
             return None
 
     @classmethod
-    def update(cls, data):
+    def update(cls, data: dict) -> bool | None:
         """Обновление данных пользователя.
         :return: True или False."""
         try:
-            firestore_db = firestore.client()
             data_reference = f"{cls.__tablename__}/{data['user_id']}"
             ref = firestore_db.document(data_reference)
             ref.update(data)

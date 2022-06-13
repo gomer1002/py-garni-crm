@@ -16,19 +16,6 @@ const registerPassword = document.querySelector("#registerPassword");
 if (registerPassword) {
     registerPassword.oninput = function (event) {
         registerRepeatPassword.setAttribute("pattern", event.target.value);
-        if (event.target.validity.tooShort) {
-            event.target.setCustomValidity(
-                "Пароль должен быть минимум " +
-                    event.target.minLength +
-                    " символов."
-            );
-        } else if (event.target.validity.patternMismatch) {
-            event.target.setCustomValidity(
-                "Пароль может содерать только буквы, цифры, а также тире и символ подчеркивания."
-            );
-        } else {
-            event.target.setCustomValidity("");
-        }
     };
 }
 

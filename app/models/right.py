@@ -1,13 +1,13 @@
 class Right:
+    read_users = "read_users"
+    edit_users = "edit_users"
     edit_storage = "edit_storage"
     read_storage = "read_storage"
-    read_cards = "read_cards"
     access_admin_panel = "access_admin_panel"
     access_kitchen_panel = "access_kitchen_panel"
     access_user_panel = "access_user_panel"
     place_order = "place_order"
-    purshare_order = "purshare_order"
-    read_orders = "read_orders"
+    purchase_order = "purchase_order"
     read_all_orders = "read_all_orders"
     edit_order_status = "edit_order_status"
 

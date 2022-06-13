@@ -2,6 +2,7 @@
 
 // const application_server_public_key = "BNbxGYNMhEIi9zrneh7mqV4oUanjLUK3m+mYZBc62frMKrEoMk88r3Lk596T0ck9xlT+aok0fO1KXBLV4+XqxYM=";
 let pushButton;
+let push_ping_btn;
 
 let isSubscribed = false;
 let swRegistration = null;
@@ -24,7 +25,9 @@ function urlB64ToUint8Array(base64String) {
 function updateBtn() {
     if (Notification.permission === "denied") {
         // pushButton.textContent = "Push Messaging Blocked.";
-        pushButton.disabled = true;
+        // pushButton.disabled = true;
+        switchElem(pushButton, "off");
+        switchElem(push_ping_btn, "off");
         updateSubscriptionOnServer(null);
         return;
     }
@@ -37,7 +40,9 @@ function updateBtn() {
         pushButton.checked = false;
     }
 
-    pushButton.disabled = false;
+    // pushButton.disabled = false;
+    switchElem(pushButton, "on");
+    switchElem(push_ping_btn, pushButton.checked ? "on" : "off");
 }
 
 function updateSubscriptionOnServer(subscription) {
@@ -58,15 +63,16 @@ function updateSubscriptionOnServer(subscription) {
         // subscriptionJson.textContent = JSON.stringify(subscription);
         // subscriptionDetails.classList.remove("is-invisible");
     } else {
+        return;
         // subscriptionDetails.classList.add("is-invisible");
-        axios
-            .get("/api/push/unsubscribe/")
-            .then(function (response) {
-                // console.log("UNsubscribe user: ", response.data);
-            })
-            .catch(function (response) {
-                console.log("UNsubscribe user: ", response);
-            });
+        // axios
+        //     .get("/api/push/unsubscribe/")
+        //     .then(function (response) {
+        //         // console.log("UNsubscribe user: ", response.data);
+        //     })
+        //     .catch(function (response) {
+        //         console.log("UNsubscribe user: ", response);
+        //     });
     }
 }
 
@@ -120,8 +126,11 @@ function unsubscribeUser() {
 
 function initializeUI() {
     pushButton = document.querySelector(".js-push-btn");
+    push_ping_btn = document.querySelector(".push_ping");
     pushButton.addEventListener("click", function () {
-        pushButton.disabled = true;
+        // pushButton.disabled = true;
+        switchElem(pushButton, "off");
+        switchElem(push_ping_btn, "off");
         if (isSubscribed) {
             unsubscribeUser();
         } else {
@@ -149,6 +158,7 @@ function initializeUI() {
 function initPush() {
     if (getCookie("access_token_cookie") != undefined) {
         pushButton = document.querySelector(".js-push-btn");
+        push_ping_btn = document.querySelector(".push_ping");
         getApplicationServerKey();
         if ("serviceWorker" in navigator && "PushManager" in window) {
             // console.log("Service Worker and Push is supported");
@@ -167,14 +177,16 @@ function initPush() {
         } else {
             // console.warn("Push messaging is not supported");
             // pushButton.textContent = "Push Not Supported";
-            pushButton.disabled = true;
+            // pushButton.disabled = true;
+            switchElem(pushButton, "off");
+            switchElem(push_ping_btn, "off");
         }
     }
 }
 
-function push_message() {
+function push_ping() {
     // console.log("sub_token", localStorage.getItem("sub_token"));
-    let message = document.querySelector("#message").value;
+    let message = "Проверка связи!";
     axios
         .post("/api/push/push_v1/", { message: message })
         .then(function (response) {

@@ -1,8 +1,7 @@
-from firebase_admin import storage
-from flask.views import MethodView
+from app import bucket
 
 
-class StorageImage(MethodView):
+class StorageImage:
     def __init__(self, file, filename, path="") -> None:
         self.file = file
         self.filename = filename
@@ -10,7 +9,6 @@ class StorageImage(MethodView):
 
     @classmethod
     def store(cls, file: str, filename: str, path: str = "") -> str:
-        bucket = storage.bucket()
         blob = bucket.blob(path + filename)
         blob.upload_from_filename(file)
         blob.make_public()
@@ -18,7 +16,6 @@ class StorageImage(MethodView):
 
     @classmethod
     def get(cls, full_path: str) -> str | None:
-        bucket = storage.bucket()
         blob = bucket.blob(full_path)
         if blob.exists():
             return blob.public_url
@@ -26,7 +23,6 @@ class StorageImage(MethodView):
 
     @classmethod
     def delete(cls, full_path: str) -> str | None:
-        bucket = storage.bucket()
         blob = bucket.blob(full_path)
         if blob.exists():
             blob.delete()
@@ -35,7 +31,6 @@ class StorageImage(MethodView):
 
     @classmethod
     def get_list(cls) -> list[str] | None:
-        bucket = storage.bucket()
         url_list = []
         for blob in bucket.list_blobs():
             if blob.name[-1] != "/":

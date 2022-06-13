@@ -8,11 +8,15 @@ function log_out_me(redirectTarget = "/") {
         .post("/api/auth/logout")
         .then(function (response) {
             deleteCookie("access_token_cookie");
-            window.location.href = redirectTarget;
+            if (redirectTarget) {
+                window.location.href = redirectTarget;
+            }
         })
         .catch(function (error) {
             deleteCookie("access_token_cookie");
-            window.location.href = redirectTarget;
+            if (redirectTarget) {
+                window.location.href = redirectTarget;
+            }
             print(error.response.data);
         });
 }

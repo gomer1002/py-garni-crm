@@ -12,7 +12,7 @@
 {% block body %}
 
 <!-- ########################### Admin Nav Bar ########################## -->
-{% include "client/admin_nav.html" %}
+{% import "client/admin_nav.html" as admin_nav %} {{ admin_nav.nav(True) }}
 <!-- ########################### Admin Nav Bar ########################## -->
 
 <!-- ########################### Storage page ########################### -->
@@ -22,7 +22,7 @@
         <div class="row px-3">
             <div class="d-flex flex-row input px-0 mb-2" style="width: 100%">
                 <input
-                    type="text"
+                    type="search"
                     name="search"
                     class="form-control"
                     placeholder="Поиск"

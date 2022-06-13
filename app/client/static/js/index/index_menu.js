@@ -30,7 +30,7 @@ function renderMenuItem(data) {
 
     let func = available_to_order
         ? `addToCart(this)`
-        : `showAlert({message:"Данный товар невозможно заказать!", "info")`;
+        : `showAlert({message:'Данный товар недоступен для заказа!', type:'info'})`;
     let menuItemBase = `
         <div class="single-product-wrapper">
             <!-- Product Image -->
@@ -115,10 +115,11 @@ function renderSingleMenuItem(item_data, clear) {
     let item_calories = item_data.portion_calories;
     let available_to_order = item_data.available_to_order;
     let price = item_data.price;
+    let in_cart = item_data.in_cart;
 
     let func = available_to_order
         ? `addToCart(this)`
-        : `showAlert({message:"Данный товар невозможно заказать!", "info")`;
+        : `showAlert({message:'Данный товар недоступен для заказа!', type:'info'})`;
     let menuItemBase = `
     <section class="single_product_details_area ">
         <!-- Product Image -->
@@ -147,7 +148,7 @@ function renderSingleMenuItem(item_data, clear) {
                 data-item-id="${item_id}"
                 onclick="${func}"
                 class="btn essence-btn"
-                >В корзину</button
+                >${in_cart ? "В корзине" : "В корзину"}</button
             >
         </div>
     </section>`;
@@ -156,6 +157,13 @@ function renderSingleMenuItem(item_data, clear) {
 
 function renderMenuItemModal(item_id, clear = false) {
     let item_data = menuData[item_id];
+    let cartDataString = localStorage.getItem("user_cart");
+    if (cartDataString) {
+        cartData = JSON.parse(cartDataString);
+        if (cartData[item_id]) {
+            item_data.in_cart = true;
+        }
+    }
     menuItemContainerWrapper.innerHTML = renderSingleMenuItem(item_data, clear);
     if (!clear) {
         addClass(menuItemOverlay, menuItemOverlayOn);

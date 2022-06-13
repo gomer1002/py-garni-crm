@@ -2,15 +2,14 @@ import uuid
 
 from app.services import get_time
 from app import logger
+from app import firestore_db
 
-from firebase_admin import firestore
-from flask.views import MethodView
 
 from firebase_admin.exceptions import FirebaseError
 from google.api_core.exceptions import FailedPrecondition
 
 
-class StorageMovement(MethodView):
+class StorageMovement:
     """
     Table schema
     """
@@ -33,7 +32,6 @@ class StorageMovement(MethodView):
         self.author = author
 
     def ref(self):
-        firestore_db = firestore.client()
         data_reference = f"{self.__tablename__}/{self.movement_id}"
         ref = firestore_db.document(data_reference)
         return ref
@@ -72,8 +70,6 @@ class StorageMovement(MethodView):
         limit = limit if limit else 50
 
         try:
-            firestore_db = firestore.client()
-
             ref = firestore_db.collection(cls.__tablename__)
 
             if ingredient_id:
@@ -86,7 +82,7 @@ class StorageMovement(MethodView):
             ref = ref.order_by(order_items_by, direction=order_direction)
             ref = ref.limit(limit)
 
-            docs = ref.get()
+            docs = ref.stream()
             data = {}
             k = 0
             for doc in docs:

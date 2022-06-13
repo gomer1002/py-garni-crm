@@ -2,13 +2,12 @@ import uuid
 
 from app.services import get_time
 from app import logger
+from app import firestore_db
 
-from firebase_admin import firestore
 from firebase_admin.exceptions import FirebaseError
-from flask.views import MethodView
 
 
-class Menu(MethodView):
+class Menu:
     """
     Table schema
     """
@@ -46,7 +45,6 @@ class Menu(MethodView):
         self.updated_on_unix = get_time(get_timestamp=True)
 
     def ref(self):
-        firestore_db = firestore.client()
         data_reference = f"{self.__tablename__}/{self.item_id}"
         ref = firestore_db.document(data_reference)
         return ref
@@ -91,7 +89,6 @@ class Menu(MethodView):
         :return: True если запись успешна, иначе False.
         """
         try:
-            firestore_db = firestore.client()
             data_reference = f"{self.__tablename__}/{self.item_id}"
             ref = firestore_db.document(data_reference)
             doc = ref.get()
@@ -114,7 +111,6 @@ class Menu(MethodView):
         """
         data = {}
         try:
-            firestore_db = firestore.client()
             if isinstance(item_id, str):
                 ref = firestore_db.collection(cls.__tablename__).document(item_id)
                 doc = ref.get()
@@ -123,7 +119,7 @@ class Menu(MethodView):
                 return data
             else:
                 ref = firestore_db.collection(cls.__tablename__)
-                docs = ref.get()
+                docs = ref.stream()
                 for doc in docs:
                     data[doc.id] = doc.to_dict()
                 return data

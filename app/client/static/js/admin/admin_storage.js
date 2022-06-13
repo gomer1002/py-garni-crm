@@ -58,6 +58,34 @@ function saveStorageChanges(elem) {
     let unit = form.unit.value;
     let tags = [];
 
+    if (ingredient_name.trim() == "") {
+        showAlert({
+            message: "Необходимо ввести наименование!",
+            type: "danger",
+        });
+        return;
+    }
+    if (min_amount.trim() == "") {
+        showAlert({
+            message: "Необходимо ввести минимальный остаток!",
+            type: "danger",
+        });
+        return;
+    }
+    if (parseInt(min_amount) < 0) {
+        showAlert({
+            message: "Минимальный остаток должен быть больше нуля!",
+            type: "danger",
+        });
+        return;
+    }
+    if (unit.trim() == "") {
+        showAlert({
+            message: "Необходимо ввести единицы измерения!",
+            type: "danger",
+        });
+        return;
+    }
     let tags_container = form.querySelector(".tags-container");
     let inputs = tags_container.querySelectorAll("input");
     for (let i = 0; i < inputs.length; i++) {
@@ -286,7 +314,7 @@ function createRecord(elem) {
     let submit_btn = form.parentNode.querySelector("[data-submit-button]");
     let records = form.querySelector(selector);
     if (records) {
-        submit_btn.classList.remove("display-none");
+        switchElem(submit_btn, "on");
     }
 }
 
@@ -635,11 +663,19 @@ function destroyTag(elem) {
 
 function destroyStorageRecord(elem) {
     let form = elem.closest("form");
-    elem.closest(".list-group-item").remove();
+    if (elem.closest(".income-item")) {
+        elem.closest(".income-item").remove();
+    } else if (elem.closest(".outcome-item")) {
+        elem.closest(".outcome-item").remove();
+    } else {
+        return;
+    }
     let submit_btn = form.parentNode.querySelector("[data-submit-button]");
-    let records = form.querySelector(".list-group-item");
+    // print(submit_btn);
+    let records = form.querySelector(".income-item");
+    // print(records);
     if (!records) {
-        toggleVisibility(submit_btn);
+        switchElem(submit_btn, "off");
     }
 }
 

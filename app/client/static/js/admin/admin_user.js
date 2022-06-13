@@ -2,6 +2,39 @@
 
 let logged_user_id;
 
+const registerPassword = document.querySelector("#registerPassword");
+if (registerPassword) {
+    registerPassword.oninput = function (event) {
+        registerRepeatPassword.setAttribute("pattern", event.target.value);
+        if (event.target.validity.tooShort) {
+            event.target.setCustomValidity(
+                "Пароль должен быть минимум " +
+                    event.target.minLength +
+                    " символов."
+            );
+        } else if (event.target.validity.patternMismatch) {
+            event.target.setCustomValidity(
+                "Пароль может содерать только буквы, цифры, а также тире и символ подчеркивания."
+            );
+        } else {
+            event.target.setCustomValidity("");
+        }
+    };
+}
+
+const registerRepeatPassword = document.querySelector(
+    "#registerRepeatPassword"
+);
+if (registerRepeatPassword) {
+    registerRepeatPassword.oninput = function (event) {
+        if (event.target.validity.patternMismatch) {
+            event.target.setCustomValidity("Пароли должны совпадать");
+        } else {
+            event.target.setCustomValidity("");
+        }
+    };
+}
+
 function toggleSpinner(elem) {
     let edit_controls = elem.querySelector(".edit-controls");
     let btns = edit_controls.querySelectorAll("button");
@@ -48,6 +81,23 @@ function saveUserChanges(elem) {
     let phone = form.user_phone.value.replace(/\D/g, "");
     let rights = [];
 
+    if (name.trim() == "") {
+        showAlert({
+            message: "Необходимо ввести имя пользователя!",
+            type: "danger",
+        });
+        return;
+    }
+
+    if (phone.length != 11) {
+        showAlert({
+            message:
+                "Введенный номер не соответствует формату +7 (___) ___-__-__!",
+            type: "danger",
+        });
+        return;
+    }
+
     let right_container = form.querySelector(".right-container");
     let ch_boxs = right_container.querySelectorAll("input");
     for (let i = 0; i < ch_boxs.length; i++) {
@@ -76,7 +126,9 @@ function saveUserChanges(elem) {
             }
         })
         .catch(function (error) {
-            showAlert({ message: error.response.message, type: "danger" });
+            toggleSpinner(form);
+            showAlert({ message: error.response.data.message, type: "danger" });
+            // print(error);
             // console.log("catch ", error.response.data);
         });
 }
@@ -203,7 +255,17 @@ function renderUsersList() {
                     ${user_data.phone}
                 </div>
                 <div class="input display-none">
-                    <input type="tel" name="user_phone" data-tel-input class="form-control" placeholder="+7 (___) ___-__-__" required />
+                    <input 
+                        type="tel" 
+                        name="user_phone" 
+                        data-tel-input 
+                        class="form-control" 
+                        placeholder="+7 (___) ___-__-__" 
+                        pattern="(\\+7|8) \\((\\d){3}\\) (\\d){3}(-(\\d){2}){2}" 
+                        minlength="11" 
+                        maxlength="18" 
+                        required 
+                    />
                 </div>
             </div>
 

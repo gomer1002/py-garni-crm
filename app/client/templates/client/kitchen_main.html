@@ -12,12 +12,13 @@
 {% block body %}
 
 <!-- ########################### Kitchen Nav Bar ########################## -->
-{% include "client/kitchen_nav.html" %}
+{% import "client/kitchen_nav.html" as kitchen_nav %} {{ kitchen_nav.nav(True)
+}}
 <!-- ########################### Kitchen Nav Bar ########################## -->
 
 <!-- Order Container -->
 <section
-    class="container d-flex flex-row justify-content-start align-items-center flex-wrap section-padding-100"
+    class="container d-flex flex-row justify-content-start flex-wrap section-padding-100"
     id="orderContainer"
 >
     <!-- There will be orders -->

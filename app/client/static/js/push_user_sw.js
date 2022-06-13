@@ -27,7 +27,6 @@ self.addEventListener("push", function (event) {
     };
 
     event.waitUntil(self.registration.showNotification(title, options));
-    showAlert(push_data.message, "success");
 });
 
 self.addEventListener("notificationclick", function (event) {

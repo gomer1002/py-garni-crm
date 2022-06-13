@@ -98,6 +98,13 @@ def create_superuser(name=None, phone=None, password=None):
 
 @manager.command
 def test():
+    from flask.views import MethodView
+
+    class Foo:
+        def __init__(self):
+            pass
+
+    print(dir(Foo))
     print("ok")
 
 

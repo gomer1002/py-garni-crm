@@ -16,6 +16,7 @@
     style="height: 100vh"
 >
     <div>
+        <input type="hidden" name="order_id" value="{{ order_id }}" />
         <button
             type="button"
             class="btn btn-primary btn-block"
@@ -42,6 +43,12 @@
     </div>
 </div>
 <script>
+    let order_id = document.querySelector("input[type=hidden]").value;
+    let order_id_short = order_id.split("-")[0];
+    let btn = document.querySelector("button");
+    btn.dataset.submitButton = `Оплатить заказ #${order_id_short}`;
+    btn.innerHTML = `Оплатить заказ #${order_id_short}`;
+
     function purshare(elem) {
         let order_id = elem.value;
         order_data = {

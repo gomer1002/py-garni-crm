@@ -11,6 +11,33 @@ function getOrderData() {
     }
 }
 
+function delete_order(order_id) {
+    axios
+        .get(`api/order/delete?order_id=${order_id}`)
+        .then(function (response) {
+            if (response.data.status == "success") {
+                showAlert({
+                    message: "Заказ успешно удален",
+                    type: "success",
+                });
+                reloadOrderList();
+            } else {
+                showAlert({
+                    message: response.data.message,
+                    type: "danger",
+                });
+            }
+        })
+        .catch(function (error) {
+            print("catch ", error);
+            toggleSubmitSpinner(orderTypeForm);
+            showAlert({
+                message: error.response.data.message,
+                type: "danger",
+            });
+        });
+}
+
 function reloadOrderList() {
     document.querySelector("#userOrdersList").innerHTML = `
     <div class="d-flex justify-content-center align-items-center" style="position: absolute; right: 50%;">
@@ -51,7 +78,20 @@ function renderOrderList(data) {
     const getPayElem = (order_id, order_status) => {
         if (order_status == "pending") {
             return `
-                <a href="/purshare?order_id=${order_id}" class="badge rounded-pill badge-primary m-1">Оплатить</a>
+                <span 
+                    class="badge rounded-pill badge-primary col-5 col-sm-12 col-md-12 m-1" 
+                    onclick="window.location.href = '/purshare?order_id=${order_id}'" 
+                    style="cursor: pointer"
+                >
+                    Оплатить
+                </span>
+                <span 
+                    class="badge rounded-pill badge-secondary col-5 col-sm-12 col-md-12 m-1" 
+                    onclick="delete_order('${order_id}')" 
+                    style="cursor: pointer"
+                >
+                    Удалить
+                </span>
                 `;
         } else {
             return ``;
@@ -60,6 +100,7 @@ function renderOrderList(data) {
 
     const getOrdersListBody = (
         order_id,
+        order_id_short,
         order_status,
         items_list_str,
         created_date_out,
@@ -69,11 +110,11 @@ function renderOrderList(data) {
         return `
             <div class="flex-fill pe-3 col-12 col-sm-9 col-md-10">
                 <h2>
-                    <p class="fw-bold accordion-button collapsed p-0 mb-1" data-mdb-toggle="collapse" data-mdb-target="#collapse_${order_id}" aria-expanded="false" aria-controls="collapse_${order_id}">
-                    Заказ #${order_id}
+                    <p class="fw-bold accordion-button collapsed p-0 mb-1" data-mdb-toggle="collapse" data-mdb-target="#collapse_${order_id_short}" aria-expanded="false" aria-controls="collapse_${order_id_short}">
+                    Заказ #${order_id_short}
                     </p>
                 </h2>
-                <div id="collapse_${order_id}" class="accordion-collapse collapse">
+                <div id="collapse_${order_id_short}" class="accordion-collapse collapse">
                     ${items_list_str}
                     <div class="d-flex justify-content-between align-items-center">
                         <span>${created_date_out}</span>
@@ -137,6 +178,7 @@ function renderOrderList(data) {
                 "list-group-item d-flex justify-content-between flex-wrap align-items-center p-2 order-list-item",
             ];
             li.innerHTML = getOrdersListBody(
+                order_id,
                 order_id_short,
                 order_status,
                 items_list_str,

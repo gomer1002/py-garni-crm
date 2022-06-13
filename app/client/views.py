@@ -66,6 +66,7 @@ def kitchen_page():
         if Right.access_kitchen_panel in claims.get("rights"):
             options["show_login"] = False
         else:
+            target = "login"
             options["auth_message"] = "Для доступа к данным недостаточно прав."
     else:
         target = "login"
@@ -94,6 +95,7 @@ def admin_page(target="users"):
         if Right.access_admin_panel in claims.get("rights"):
             options["show_login"] = False
         else:
+            target = "login"
             options["auth_message"] = "Для доступа к данным недостаточно прав."
     else:
         target = "login"
@@ -102,7 +104,7 @@ def admin_page(target="users"):
 
 ################### dummy purshare ##################################
 @client.route("/purshare")
-def dummy_purshare_page():
+def dummy_purchase_page():
     """
     Страница для оплаты заказа
     :return:
@@ -111,7 +113,7 @@ def dummy_purshare_page():
     order_id = get_data.get("order_id")
     response = make_response(
         render_template(
-            "client/dummy_purshare.html", order_id=order_id if order_id else ""
+            "client/dummy_purchase.html", order_id=order_id if order_id else ""
         )
     )
     return response

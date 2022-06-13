@@ -81,9 +81,18 @@ function searchData(elem) {
                 switchElem(form, "off");
             }
         } else if (
-            form.dataset.sortName
-                .toLowerCase()
-                .includes(elem.value.toLowerCase())
+            (form.dataset.sortName &&
+                form.dataset.sortName
+                    .toLowerCase()
+                    .includes(elem.value.toLowerCase())) ||
+            (form.dataset.sortPhone &&
+                form.dataset.sortPhone
+                    .toLowerCase()
+                    .includes(elem.value.toLowerCase())) ||
+            (form.dataset.sortCategory &&
+                form.dataset.sortCategory
+                    .toLowerCase()
+                    .includes(elem.value.toLowerCase()))
         ) {
             switchElem(form, "on");
         } else {

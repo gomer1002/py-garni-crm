@@ -37,7 +37,7 @@ function getTagsList() {
     let tags = [];
     for (let k of Object.keys(menuData)) {
         let instance = menuData[k];
-        if (instance.tags) {
+        if (instance.tags && instance.show) {
             for (let tag of instance.tags) {
                 if (tags.indexOf(tag) == -1) {
                     tags.push(tag);
@@ -53,7 +53,7 @@ function getMenuCategoriesList() {
     for (let k of Object.keys(menuData)) {
         let instance = menuData[k];
         let category = instance.category;
-        if (category) {
+        if (category && instance.show) {
             if (categories.indexOf(category) == -1) {
                 categories.push(category);
             }
@@ -173,12 +173,25 @@ function renderNavBar(data) {
     let footerMenu = document.querySelector(".footer_menu").querySelector("ul");
 
     if (getCookie("access_token_cookie") != undefined) {
-        userName.innerHTML = parseJwt(getCookie("access_token_cookie")).name;
-        essenceUserBtn.addEventListener("click", function () {
-            addClass(userOverlay, userOverlayOn);
-            addClass(userWrapper, userOn);
-            document.dispatchEvent(cart_state_changed_evt);
-        });
+        let jwt = parseJwt(getCookie("access_token_cookie"));
+
+        if (jwt.rights.indexOf("access_user_panel") == -1) {
+            showAlert({
+                message: "Недостаточно прав для доступа в личный кабинет! ",
+                type: "warning",
+            });
+            essenceUserBtn.addEventListener("click", function () {
+                window.location.href = "/login";
+            });
+            log_out_me(null);
+        } else {
+            userName.innerHTML = jwt.name;
+            essenceUserBtn.addEventListener("click", function () {
+                addClass(userOverlay, userOverlayOn);
+                addClass(userWrapper, userOn);
+                document.dispatchEvent(cart_state_changed_evt);
+            });
+        }
     } else {
         essenceUserBtn.addEventListener("click", function () {
             window.location.href = "/login";

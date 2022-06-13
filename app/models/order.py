@@ -1,17 +1,15 @@
-from types import NoneType
 import uuid
 
 from app.services import get_time
 from app import logger
+from app import firestore_db
 
-from firebase_admin import firestore
 from firebase_admin.exceptions import FirebaseError
-from flask.views import MethodView
 
 from app.models.order_status import OrderStatus
 
 
-class Order(MethodView):
+class Order:
     """
     Table schema
     """
@@ -56,7 +54,6 @@ class Order(MethodView):
             self.finished_on_unix = get_time(get_timestamp=True)
 
     def ref(self):
-        firestore_db = firestore.client()
         data_reference = f"{self.__tablename__}/{self.order_id}"
         ref = firestore_db.document(data_reference)
         return ref
@@ -103,7 +100,6 @@ class Order(MethodView):
         :return: True если запись успешна, иначе False.
         """
         try:
-            firestore_db = firestore.client()
             data_reference = f"{self.__tablename__}/{self.order_id}"
             ref = firestore_db.document(data_reference)
             doc = ref.get()
@@ -130,7 +126,7 @@ class Order(MethodView):
         from_date: int = None,
         to_date: int = None,
         limit: int = None,
-    ) -> dict | NoneType:
+    ) -> dict | None:
         """
         Функция получения элементов меню если указан order_id.
         :return: один элемент при указании order_id,
@@ -142,8 +138,6 @@ class Order(MethodView):
 
         data = {}
         try:
-            firestore_db = firestore.client()
-
             ref = firestore_db.collection(cls.__tablename__)
 
             if order_id:
@@ -154,7 +148,7 @@ class Order(MethodView):
                     # data[0] = doc.to_dict()
                 return data
             else:
-                docs = ref.get()
+                docs = ref.stream()
                 for doc in docs:
                     temp = doc.to_dict()
                     if (
@@ -176,6 +170,21 @@ class Order(MethodView):
                 )
                 return data_sorted
 
+        except (FirebaseError, ValueError) as e:
+            logger.error(str(e))
+            return None
+
+    @classmethod
+    def delete(cls, order_id):
+        """
+        Функция удаления заказа из БД.
+        :return: True если запись успешна, иначе False.
+        """
+        try:
+            data_reference = f"{cls.__tablename__}/{order_id}"
+            ref = firestore_db.document(data_reference)
+            ref.delete()
+            return True
         except (FirebaseError, ValueError) as e:
             logger.error(str(e))
             return None
