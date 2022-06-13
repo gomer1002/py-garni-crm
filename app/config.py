@@ -19,9 +19,6 @@ class BaseConfig:
     SYS_ROOT_URL = os.getenv("SYS_ROOT_URL")
 
     DEBUG = False
-    BCRYPT_HASH_PREFIX = 14
-    # AUTH_TOKEN_EXPIRY_DAYS = 30
-    # AUTH_TOKEN_EXPIRY_SECONDS = 3000
 
     # ключи для работы push уведомлений
     DER_BASE64_ENCODED_PRIVATE_KEY = os.getenv("DER_BASE64_ENCODED_PRIVATE_KEY")
@@ -48,9 +45,6 @@ class DevelopmentConfig(BaseConfig):
     """
 
     DEBUG = True
-    # BCRYPT_HASH_PREFIX = 4
-    # AUTH_TOKEN_EXPIRY_DAYS = 0
-    # AUTH_TOKEN_EXPIRY_SECONDS = 60
 
 
 class TestingConfig(BaseConfig):
@@ -60,10 +54,6 @@ class TestingConfig(BaseConfig):
 
     DEBUG = True
     TESTING = True
-    # BCRYPT_HASH_PREFIX = 4
-    # AUTH_TOKEN_EXPIRY_DAYS = 0
-    # AUTH_TOKEN_EXPIRY_SECONDS = 3
-    # AUTH_TOKEN_EXPIRATION_TIME_DURING_TESTS = 5
 
 
 class ProductionConfig(BaseConfig):
@@ -73,7 +63,4 @@ class ProductionConfig(BaseConfig):
 
     DEBUG = False
     JWT_COOKIE_SECURE = True
-    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=1)
-    # BCRYPT_HASH_PREFIX = 13
-    # AUTH_TOKEN_EXPIRY_DAYS = 30
-    # AUTH_TOKEN_EXPIRY_SECONDS = 20
+    JWT_ACCESS_TOKEN_EXPIRES = timedelta(hours=8)

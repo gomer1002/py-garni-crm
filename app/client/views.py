@@ -1,10 +1,8 @@
 from flask import (
     Blueprint,
-    redirect,
     request,
     make_response,
     render_template,
-    url_for,
 )
 from app.models.right import Right
 
@@ -106,7 +104,7 @@ def admin_page(target="users"):
 @client.route("/purshare")
 def dummy_purchase_page():
     """
-    Страница для оплаты заказа
+    Страница оплаты заказа
     :return:
     """
     get_data = request.values.to_dict()

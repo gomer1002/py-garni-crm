@@ -25,6 +25,7 @@ bucket = storage.bucket()
 ##### client side blueprints #####
 
 ########### client ###############
+
 # здесь находится client main html
 from app.client.views import client
 

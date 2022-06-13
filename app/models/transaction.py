@@ -12,6 +12,10 @@ from app import firestore_db
 
 
 class Transaction:
+    """
+    Класс, реализующий обработку данных через транзации.
+    """
+
     def confirm_order(order_id: str, author: str) -> bool | list:
         """
         Функция подтверждения заказа, обновления остатка продуктов
