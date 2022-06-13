@@ -32,6 +32,8 @@ py -m pip install -r ./requirements.txt
 
 >В данной инструкции необходимо после открытия магазина приложений с помощью поиска найти и установить приложение `Ubuntu` любой версии. После чего произвести установку и запуск redis-server'а через это приложение.
 
+Также можно воспользоваться [этим](https://github.com/zkteco-home/redis-windows.git) или [вот этим](https://github.com/ServiceStack/redis-windows.git) репозиториями.
+
 Настройка config файла:
 
 В папке проекта необходимо переименовать файл _config_sample.json_ в _config.json_.
