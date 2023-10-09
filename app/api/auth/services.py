@@ -42,10 +42,19 @@ def auth_user(post_data):
     ).sign_in()
 
 
+# def blacklist_jwt_token_redis(request_header):  # correct version of blacklist_jwt_token using redis
+#     """Добавление jwt токена в черный список"""
+#     if request_header:
+#         jti = get_jwt()["jti"]
+#         jwt_redis_blocklist.set(jti, "", ex=app.config.get("JWT_ACCESS_TOKEN_EXPIRES"))
+#         return True
+#     return False
+
+
 def blacklist_jwt_token(request_header):
     """Добавление jwt токена в черный список"""
     if request_header:
         jti = get_jwt()["jti"]
-        jwt_redis_blocklist.set(jti, "", ex=app.config.get("JWT_ACCESS_TOKEN_EXPIRES"))
+        jwt_redis_blocklist.ttl(jti, "", app.config.get("JWT_ACCESS_TOKEN_EXPIRES"))
         return True
     return False

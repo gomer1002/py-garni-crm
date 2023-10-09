@@ -2,7 +2,9 @@ import os
 from flask import Flask
 from firebase_admin import credentials, initialize_app, firestore, storage
 from flask_jwt_extended import JWTManager
-import redis
+
+# import redis
+from expiring_dict import ExpiringDict
 from loguru import logger
 
 # Initialize application
@@ -14,7 +16,8 @@ app.config.from_object(app_settings)
 
 # redis configuration
 jwt = JWTManager(app)
-jwt_redis_blocklist = redis.from_url(os.environ.get("REDIS_URL"))
+# jwt_redis_blocklist = redis.from_url(os.environ.get("REDIS_URL")) # correct version of jwt_redis_blacklist using redis
+jwt_redis_blocklist = ExpiringDict()
 
 # firebase configuration
 cred = credentials.Certificate(app.config.get("FIREBASE_DATABASE")["serviceAccount"])

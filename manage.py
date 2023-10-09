@@ -1,7 +1,8 @@
 import os
 import json
-import redis
-from threading import Thread
+
+# import redis
+# from threading import Thread
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 conf = json.loads(open(os.path.join(base_dir, "config.json"), "r").read())
@@ -15,15 +16,15 @@ os.environ["DER_BASE64_ENCODED_PRIVATE_KEY"] = conf["DER_BASE64_ENCODED_PRIVATE_
 os.environ["DER_BASE64_ENCODED_PUBLIC_KEY"] = conf["DER_BASE64_ENCODED_PUBLIC_KEY"]
 
 
-def run_redis():
-    r = redis.from_url(os.environ.get("REDIS_URL"))
-    try:
-        r.ping()
-    except redis.exceptions.ConnectionError as e:
-        print("starting redis . . . STARTING")
-        os.system("redis-server.exe")
-    else:
-        print("starting redis . . . OK")
+# def run_redis():
+#     r = redis.from_url(os.environ.get("REDIS_URL"))
+#     try:
+#         r.ping()
+#     except redis.exceptions.ConnectionError as e:
+#         print("starting redis . . . STARTING")
+#         os.system("redis-server.exe")
+#     else:
+#         print("starting redis . . . OK")
 
 
 from flask_script import Manager
@@ -111,8 +112,8 @@ def test():
 @manager.command
 def runserver():
     """Запуск redis сервера и Flask development сервера"""
-    redis_server = Thread(target=run_redis, args=(), daemon=True)
-    redis_server.start()
+    # redis_server = Thread(target=run_redis, args=(), daemon=True)
+    # redis_server.start()
     app.run(host="0.0.0.0", port="80")
 
 
